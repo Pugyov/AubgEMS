@@ -32,4 +32,8 @@ public class Event
     // REQUIRED event type
     public int EventTypeId { get; set; }
     public EventType EventType { get; set; } = null!;
+    
+    [MaxLength(500)]
+    [Url]
+    public string? ImageUrl { get; set; }
 }

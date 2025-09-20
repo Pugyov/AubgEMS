@@ -12,5 +12,9 @@ public class NewsPost
     [Required] // no max length → LONGTEXT in MySQL via Pomelo
     public string Body { get; set; } = string.Empty;
 
-    public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime CreatedAt { get; set; }
+
+    [MaxLength(500)]
+    [Url]
+    public string? ImageUrl { get; set; }
 }

@@ -11,7 +11,7 @@ namespace AubgEMS.Infrastructure.Data.SeedDb.Configurations
             builder.HasKey(a => new { a.EventId, a.UserId });
 
             builder.HasOne(a => a.Event)
-                .WithMany() // no navigation needed on Event for now
+                .WithMany()
                 .HasForeignKey(a => a.EventId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
