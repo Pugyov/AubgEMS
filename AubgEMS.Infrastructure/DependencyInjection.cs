@@ -14,9 +14,17 @@ public static class DependencyInjection
         services.AddDbContext<ApplicationDbContext>(opt =>
             opt.UseMySql(cs, ServerVersion.AutoDetect(cs)));
 
-        services.AddDefaultIdentity<IdentityUser>(opt =>
+        services
+            .AddDefaultIdentity<IdentityUser>(opt =>
             {
-                opt.SignIn.RequireConfirmedAccount = true;
+                opt.SignIn.RequireConfirmedAccount = false;
+                opt.User.RequireUniqueEmail = true;
+                //password rules
+                opt.Password.RequiredLength = 6;
+                opt.Password.RequireNonAlphanumeric = true;
+                opt.Password.RequireUppercase = true;
+                opt.Password.RequireLowercase = true;
+                opt.Password.RequireDigit = false;
             })
             .AddRoles<IdentityRole>()
             .AddEntityFrameworkStores<ApplicationDbContext>();
