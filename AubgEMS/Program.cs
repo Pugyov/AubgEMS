@@ -4,15 +4,15 @@ using AubgEMS.Core.Constants;          // RoleNames (policies)
 
 var builder = WebApplication.CreateBuilder(args);
 
-// MVC + Identity UI plumbing
+// MVC + Identity UI
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
-// Our single source of truth for DbContext + Identity (Pomelo MySQL)
+// DbContext + Identity via MySQL (centralized in Infrastructure)
 builder.Services.AddInfrastructure(builder.Configuration);
 
-// Authorization policies (used later on controllers/actions)
+// Authorization policies
 builder.Services.AddAuthorization(options =>
 {
     options.AddPolicy("RequireAdmin", p => p.RequireRole(RoleNames.Admin));
@@ -40,9 +40,16 @@ app.UseRouting();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Area route (Admin)
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Dashboard}/{action=Index}/{id?}");
+
+// Default route
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();
