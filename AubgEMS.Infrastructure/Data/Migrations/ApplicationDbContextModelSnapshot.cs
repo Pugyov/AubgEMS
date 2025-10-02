@@ -32,7 +32,7 @@ namespace AubgEMS.Infrastructure.Data.Migrations
 
                     MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("DepartmentId")
+                    b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
@@ -90,6 +90,7 @@ namespace AubgEMS.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 5,
+                            DepartmentId = 11,
                             Name = "Other",
                             OrganizerId = "eb9175e5-1e90-4a71-b89e-a1ee5d0cc9e9"
                         });
@@ -165,6 +166,11 @@ namespace AubgEMS.Infrastructure.Data.Migrations
                         {
                             Id = 10,
                             Name = "Politics and European Studies Department"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "University-wide (Independent Clubs)"
                         });
                 });
 
@@ -765,15 +771,15 @@ namespace AubgEMS.Infrastructure.Data.Migrations
                         {
                             Id = "eb9175e5-1e90-4a71-b89e-a1ee5d0cc9e9",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "afbe7bc2-5c79-4e2d-b906-060e110f467c",
+                            ConcurrencyStamp = "509b5d54-fc3e-4a69-bdcd-1bec472b8fa8",
                             Email = "admin@mail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.COM",
                             NormalizedUserName = "ADMIN@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEHc+8XXTDy2I3gDU03fk/wBOchMrW5clW2Mookpa2mM6eWvs9G9G1BwJ66XMHA8c2g==",
+                            PasswordHash = "AQAAAAIAAYagAAAAENN8j3iPdRRNr5jAnto4CHwDsxAux1Fpz7Y1MWZ7PhMPhg6ue7u21zh3eMUei1jOlw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "be122832-9527-4fc6-8ebb-12cea37b82c0",
+                            SecurityStamp = "42e9920a-e7f1-488e-9f88-45bfbfc5ce81",
                             TwoFactorEnabled = false,
                             UserName = "admin@mail.com"
                         },
@@ -781,15 +787,15 @@ namespace AubgEMS.Infrastructure.Data.Migrations
                         {
                             Id = "dea12856-c198-4129-b3f3-b893d8395082",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "5d9d7e56-1279-4d2b-ba3d-871b68434ee6",
+                            ConcurrencyStamp = "c31b54bd-e618-4707-a6d1-a981e9dbc69d",
                             Email = "organizer@mail.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ORGANIZER@MAIL.COM",
                             NormalizedUserName = "ORGANIZER@MAIL.COM",
-                            PasswordHash = "AQAAAAIAAYagAAAAEExXcG1SLzfcL/TBDGcpGkgo97GjEiRAkHxHaLSc7YGN1ScSYpRlBbWtOFGzVGc5fQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEH67umwht9eQaoKORlnvelhqkfl+/6qLphU4PNs+Ir5ifrcIIlZv1qlUDRKjaaVTpQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "b7103ea0-d289-435d-8b01-ba739a1adc44",
+                            SecurityStamp = "9b862235-b767-4ae6-a8bf-ea1b5e632a9f",
                             TwoFactorEnabled = false,
                             UserName = "organizer@mail.com"
                         });
@@ -893,7 +899,8 @@ namespace AubgEMS.Infrastructure.Data.Migrations
                     b.HasOne("AubgEMS.Infrastructure.Data.Models.Department", "Department")
                         .WithMany("Clubs")
                         .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Department");
                 });

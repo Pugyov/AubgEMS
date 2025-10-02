@@ -73,7 +73,8 @@ namespace AubgEMS.Infrastructure.Data.SeedDb
                 new Department { Id = 7,  Name = "Mathematics and Science Department" },
                 new Department { Id = 8,  Name = "Modern Languages and Arts Department" },
                 new Department { Id = 9,  Name = "Philosophy and Psychology Department" },
-                new Department { Id = 10, Name = "Politics and European Studies Department" }
+                new Department { Id = 10, Name = "Politics and European Studies Department" },
+                new Department { Id = 11, Name = "University-wide (Independent Clubs)" }
             };
         }
     }

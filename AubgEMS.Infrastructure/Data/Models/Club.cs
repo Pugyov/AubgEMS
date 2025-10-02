@@ -16,8 +16,8 @@ public class Club
     [Required]
     public string OrganizerId { get; set; } = string.Empty;
 
-    public int? DepartmentId { get; set; }
-    public Department? Department { get; set; }
+    public int DepartmentId { get; set; }
+    public Department Department { get; set; } = null!;
 
     public ICollection<Event> Events { get; set; } = new List<Event>();
 }

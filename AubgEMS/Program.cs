@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Identity;
 using AubgEMS.Infrastructure;          // AddInfrastructure()
 using AubgEMS.Core.Constants;          // RoleNames (policies)
+using AubgEMS.Core.Contracts;
+using AubgEMS.Core.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,6 +13,13 @@ builder.Services.AddRazorPages();
 
 // DbContext + Identity via MySQL (centralized in Infrastructure)
 builder.Services.AddInfrastructure(builder.Configuration);
+
+// Core services DI
+builder.Services.AddScoped<IEventService, EventService>();
+builder.Services.AddScoped<IClubService, ClubService>();
+builder.Services.AddScoped<INewsService, NewsService>();
+builder.Services.AddScoped<IAttendanceService, AttendanceService>();
+builder.Services.AddScoped<ILookupService, LookupService>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>
