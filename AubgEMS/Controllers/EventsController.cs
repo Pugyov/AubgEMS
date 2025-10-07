@@ -1,0 +1,95 @@
+using System.Security.Claims;
+using AubgEMS.Core.Contracts;
+using AubgEMS.Core.Models.Events;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace AubgEMS.Controllers
+{
+    public class EventsController : Controller
+    {
+        private readonly IEventService _events;
+        private readonly ILookupService _lookups;
+        private readonly IAttendanceService _attendance;
+
+        public EventsController(IEventService events, ILookupService lookups, IAttendanceService attendance)
+        {
+            _events = events;
+            _lookups = lookups;
+            _attendance = attendance;
+        }
+
+        // GET /Events
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Index([FromQuery] EventQuery query, CancellationToken ct)
+        {
+            if (query.Page < 1) query = new EventQuery(1, query.PageSize);
+            if (query.PageSize < 1) query = new EventQuery(query.Page, 10);
+
+            var result = await _events.GetAllAsync(query, ct);
+
+            var eventTypes  = await _lookups.EventTypesAsync(ct);
+            var departments = await _lookups.DepartmentsAsync(ct);
+            var clubs       = await _lookups.ClubsAsync(query.DepartmentId, ct);
+
+            ViewBag.EventTypes  = new SelectList(eventTypes,  "Id", "Name", query.EventTypeId);
+            ViewBag.Departments = new SelectList(departments, "Id", "Name", query.DepartmentId);
+            ViewBag.Clubs       = new SelectList(clubs,       "Id", "Name", query.ClubId);
+            ViewBag.Query = query;
+
+            return View(result);
+        }
+
+        // GET /Events/Details/5
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id, CancellationToken ct)
+        {
+            var model = await _events.GetByIdAsync(id, ct);
+            if (model is null) return NotFound();
+
+            // For signed-in users, tell the view whether they already joined
+            bool joinedByMe = false;
+            if (User?.Identity?.IsAuthenticated == true)
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+                joinedByMe = await _attendance.IsJoinedAsync(id, userId, ct);
+            }
+            ViewBag.JoinedByMe = joinedByMe;
+
+            return View(model);
+        }
+
+        // POST /Events/Join
+        [HttpPost]
+        [Authorize(Policy = "RequireSignedIn")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Join(int id, string? returnUrl = null, CancellationToken ct = default)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            await _attendance.JoinAsync(id, userId, ct);
+            return SafeBack(returnUrl, id);
+        }
+
+        // POST /Events/Leave
+        [HttpPost]
+        [Authorize(Policy = "RequireSignedIn")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Leave(int id, string? returnUrl = null, CancellationToken ct = default)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            await _attendance.LeaveAsync(id, userId, ct);
+            return SafeBack(returnUrl, id);
+        }
+
+        private IActionResult SafeBack(string? returnUrl, int eventId)
+        {
+            if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
+                return Redirect(returnUrl);
+
+            return RedirectToAction(nameof(Details), new { id = eventId });
+        }
+    }
+}

@@ -1,0 +1,15 @@
+@model AubgEMS.Core.Models.News.NewsEditDto
+@{
+    ViewData["Title"] = "Create News";
+}
+<h1>Create News</h1>
+
+<form method="post">
+    <partial name="_Form" model="Model" />
+    <button type="submit" class="btn btn-primary">Create</button>
+    <a asp-area="Admin" asp-controller="News" asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

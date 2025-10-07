@@ -11,4 +11,6 @@ public class EventListItemDto
     public string EventTypeName { get; set; } = string.Empty;
     public string? LocationName { get; set; }
     public string? ImageUrl { get; set; }
+    public bool CreatedByMe { get; set; }
+    public bool JoinedByMe { get; set; }
 }

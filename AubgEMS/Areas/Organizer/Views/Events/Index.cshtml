@@ -1,0 +1,92 @@
+@model AubgEMS.Core.Models.Common.PageResult<AubgEMS.Core.Models.Events.EventListItemDto>
+
+@{
+    ViewData["Title"] = "Organizer • Events";
+
+    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+    var page       = Model.Page;
+    var pageSize   = Model.PageSize;
+    var prevDisabled = page <= 1 ? "disabled" : "";
+    var nextDisabled = page >= totalPages ? "disabled" : "";
+}
+
+<h1 class="mb-3">Manage Events</h1>
+
+@if (TempData["Success"] is string successMsg)
+{
+    <div class="alert alert-success">@successMsg</div>
+}
+@if (TempData["Error"] is string errorMsg)
+{
+    <div class="alert alert-danger">@errorMsg</div>
+}
+
+<p>
+    <a class="btn btn-primary"
+       asp-area="Organizer"
+       asp-controller="Events"
+       asp-action="Create">Create Event</a>
+</p>
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info">You have no events yet.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+        <tr>
+            <th>Title</th>
+            <th>Start</th>
+            <th>Type</th>
+            <th>Club</th>
+            <th>Location</th>
+            <th class="text-end">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var e in Model.Items)
+        {
+            <tr>
+                <td>@e.Title</td>
+                <td>@e.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
+                <td>@e.EventTypeName</td>
+                <td>@e.ClubName</td>
+                <td>@(e.LocationName ?? "-")</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-warning"
+                       asp-area="Organizer" asp-controller="Events" asp-action="Edit" asp-route-id="@e.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger"
+                       asp-area="Organizer" asp-controller="Events" asp-action="Delete" asp-route-id="@e.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="pager">
+            <ul class="pagination">
+                <li class="page-item @prevDisabled">
+                    <a class="page-link"
+                       asp-area="Organizer" asp-controller="Events" asp-action="Index"
+                       asp-route-page="@(page - 1)"
+                       asp-route-pageSize="@pageSize">Prev</a>
+                </li>
+
+                <li class="page-item disabled">
+                    <span class="page-link">Page @(page) of @(totalPages)</span>
+                </li>
+
+                <li class="page-item @nextDisabled">
+                    <a class="page-link"
+                       asp-area="Organizer" asp-controller="Events" asp-action="Index"
+                       asp-route-page="@(page + 1)"
+                       asp-route-pageSize="@pageSize">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}

@@ -153,4 +153,67 @@ public class EventService : IEventService
         await _db.SaveChangesAsync(ct);
         return Result.Ok();
     }
+    
+    public async Task<PageResult<EventListItemDto>> GetCreatedByAsync(string organizerId, PageQuery page, CancellationToken ct = default)
+    {
+        var q = _db.Events
+            .AsNoTracking()
+            .Include(e => e.Club)
+            .Include(e => e.EventType)
+            .Include(e => e.Location)
+            .Where(e => e.OrganizerId == organizerId);
+
+        var total = await q.CountAsync(ct);
+
+        var items = await q
+            .OrderBy(e => e.StartTime)
+            .Skip((page.Page - 1) * page.PageSize)
+            .Take(page.PageSize)
+            .Select(e => new EventListItemDto
+            {
+                Id = e.Id,
+                Title = e.Title,
+                StartTime = e.StartTime,
+                Capacity = e.Capacity,
+                ClubName = e.Club.Name,
+                EventTypeName = e.EventType.Name,
+                LocationName = e.Location != null ? e.Location.Name : null,
+                ImageUrl = e.ImageUrl
+            })
+            .ToListAsync(ct);
+
+        return new PageResult<EventListItemDto>(items, total, page.Page, page.PageSize);
+    }
+    public async Task<PageResult<EventListItemDto>> GetMineAsync(
+        string organizerId, EventQuery query, CancellationToken ct = default)
+    {
+        int page = Math.Max(1, query.Page);
+        int pageSize = Math.Max(1, query.PageSize);
+
+        var q = _db.Events
+            .AsNoTracking()
+            .Include(e => e.Club)
+            .Include(e => e.EventType)
+            .Include(e => e.Location)
+            .Where(e => e.OrganizerId == organizerId);
+
+        int total = await q.CountAsync(ct);
+
+        var items = await q
+            .OrderByDescending(e => e.StartTime)
+            .Skip((page - 1) * pageSize)
+            .Take(pageSize)
+            .Select(e => new EventListItemDto
+            {
+                Id = e.Id,
+                Title = e.Title,
+                StartTime = e.StartTime,
+                EventTypeName = e.EventType.Name,
+                ClubName = e.Club.Name,
+                LocationName = e.Location != null ? e.Location.Name : null
+            })
+            .ToListAsync(ct);
+
+        return new PageResult<EventListItemDto>(items, total, page, pageSize);
+    }
 }

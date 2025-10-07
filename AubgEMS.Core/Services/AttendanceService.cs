@@ -45,6 +45,8 @@ namespace AubgEMS.Core.Services
             int p = page?.Page     ?? 1;  if (p < 1) p = 1;
             int s = page?.PageSize ?? 10; if (s < 1) s = 10;
 
+            var nowUtc = DateTime.UtcNow;
+
             var joinedIds = _db.EventAttendances
                 .Where(a => a.UserId == userId)
                 .Select(a => a.EventId);
@@ -53,11 +55,12 @@ namespace AubgEMS.Core.Services
                 .Where(e => e.OrganizerId == userId)
                 .Select(e => e.Id);
 
+            // joined ∪ created (no dups)
             var eventIds = joinedIds.Union(createdIds);
 
             var q = _db.Events
                 .AsNoTracking()
-                .Where(e => eventIds.Contains(e.Id) && e.StartTime >= DateTime.UtcNow)
+                .Where(e => eventIds.Contains(e.Id))
                 .Include(e => e.Club)
                 .Include(e => e.EventType)
                 .Include(e => e.Location);
@@ -65,7 +68,9 @@ namespace AubgEMS.Core.Services
             var total = await q.CountAsync(ct);
 
             var items = await q
-                .OrderBy(e => e.StartTime)
+                // Upcoming first, then by actual start time
+                .OrderBy(e => e.StartTime < nowUtc) // false (upcoming) first
+                .ThenBy(e => e.StartTime)
                 .Skip((p - 1) * s)
                 .Take(s)
                 .Select(e => new EventListItemDto
@@ -77,11 +82,21 @@ namespace AubgEMS.Core.Services
                     ClubName = e.Club.Name,
                     EventTypeName = e.EventType.Name,
                     LocationName = e.Location != null ? e.Location.Name : null,
-                    ImageUrl = e.ImageUrl
+                    ImageUrl = e.ImageUrl,
+
+                    // NEW: set flags for the UI
+                    CreatedByMe = (e.OrganizerId == userId),
+                    JoinedByMe  = joinedIds.Contains(e.Id)
                 })
                 .ToListAsync(ct);
 
             return new PageResult<EventListItemDto>(items, total, p, s);
         }
+        public async Task<bool> IsJoinedAsync(int eventId, string userId, CancellationToken ct = default)
+        {
+            return await _db.EventAttendances
+                .AnyAsync(a => a.EventId == eventId && a.UserId == userId, ct);
+        }
+
     }
 }

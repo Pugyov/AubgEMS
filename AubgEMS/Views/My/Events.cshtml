@@ -1,3 +1,93 @@
-@{ ViewData["Title"] = "My Events"; }
+@model AubgEMS.Core.Models.Common.PageResult<AubgEMS.Core.Models.Events.EventListItemDto>
+
+@{
+    ViewData["Title"] = "My Events";
+    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+}
+
 <h1>My Events</h1>
-<p>Shows events you joined (and created, if organizer). (Stub)</p>
+<p class="text-muted">Events you’ve created or joined, upcoming first.</p>
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info">You don’t have any events yet.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+        <tr>
+            <th style="width: 22%">When</th>
+            <th>Title</th>
+            <th style="width: 18%">Club</th>
+            <th style="width: 18%">Type</th>
+            <th style="width: 18%">Location</th>
+            <th style="width: 12%"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model.Items)
+        {
+            <tr>
+                <td>@item.StartTime.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm")</td>
+                <td>
+                    <a asp-controller="Events" asp-action="Details" asp-route-id="@item.Id">
+                        @item.Title
+                    </a>
+                </td>
+                <td>@(string.IsNullOrWhiteSpace(item.ClubName) ? "-" : item.ClubName)</td>
+                <td>@(string.IsNullOrWhiteSpace(item.EventTypeName) ? "-" : item.EventTypeName)</td>
+                <td>@(string.IsNullOrWhiteSpace(item.LocationName) ? "TBA" : item.LocationName)</td>
+                <td class="text-end">
+                    @* Show status/action *@
+                    @if (item.CreatedByMe)
+                    {
+                        <span class="badge bg-secondary">Created by you</span>
+                    }
+                    else if (item.JoinedByMe)
+                    {
+                        <form asp-controller="Events" asp-action="Leave" method="post" class="d-inline">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="id" value="@item.Id" />
+                            <input type="hidden" name="returnUrl"
+                                   value="@Url.Action("Events", "My", new { page = Model.Page, pageSize = Model.PageSize })" />
+                            <button type="submit" class="btn btn-sm btn-outline-danger">Leave</button>
+                        </form>
+                    }
+
+                    <a class="btn btn-sm btn-outline-primary ms-2"
+                       asp-controller="Events" asp-action="Details" asp-route-id="@item.Id">
+                        View
+                    </a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <div class="d-flex justify-content-between align-items-center">
+        <div class="text-muted">
+            Page @Model.Page of @totalPages • @Model.TotalCount total
+        </div>
+        <nav>
+            <ul class="pagination mb-0">
+                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Events"
+                       asp-route-page="@(Model.Page - 1)"
+                       asp-route-pageSize="@Model.PageSize">Prev</a>
+                </li>
+                <li class="page-item @(Model.Page >= totalPages ? "disabled" : "")">
+                    <a class="page-link"
+                       asp-action="Events"
+                       asp-route-page="@(Model.Page + 1)"
+                       asp-route-pageSize="@Model.PageSize">Next</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

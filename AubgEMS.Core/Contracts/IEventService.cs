@@ -7,7 +7,11 @@ public interface IEventService
 {
     Task<PageResult<EventListItemDto>> GetAllAsync(EventQuery query, CancellationToken ct = default);
     Task<EventDetailsDto?> GetByIdAsync(int id, CancellationToken ct = default);
-
+    Task<PageResult<EventListItemDto>> GetCreatedByAsync(string organizerId, PageQuery page, CancellationToken ct = default);
+    Task<PageResult<EventListItemDto>> GetMineAsync(
+        string organizerId,
+        EventQuery query,
+        CancellationToken ct = default);
     Task<Result<int>> CreateAsync(EventCreateDto model, string currentUserId, CancellationToken ct = default);
     Task<Result> UpdateAsync(EventEditDto model, string currentUserId, CancellationToken ct = default);
     Task<Result> DeleteAsync(int id, string currentUserId, CancellationToken ct = default);

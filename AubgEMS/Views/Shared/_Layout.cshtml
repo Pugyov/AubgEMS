@@ -2,17 +2,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>@ViewData["Title"] - AubgEMS</title>
-    <script type="importmap"></script>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/AubgEMS.styles.css" asp-append-version="true"/>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
 <body>
 <header>
-    <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
             <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AubgEMS</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
@@ -26,7 +25,10 @@
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link text-dark" asp-area="" asp-controller="News" asp-action="Index">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
                     </li>
 
                     @* Admin link (admins only) *@
@@ -41,9 +43,14 @@
                     @if (User.IsInRole(RoleNames.Organizer) || User.IsInRole(RoleNames.Admin))
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Organizer" asp-action="Index">Organizer</a>
+                            <a class="nav-link text-dark" asp-area="Organizer" asp-controller="Events" asp-action="Index">Organizer</a>
                         </li>
                     }
+
+                    <li class="nav-item">
+                        <!-- FIX: clear ambient area -->
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Clubs" asp-action="Index">Clubs</a>
+                    </li>
 
                     @* My Events (any signed-in user) *@
                     @if (User.Identity?.IsAuthenticated ?? false)
@@ -52,9 +59,13 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="My" asp-action="Events">My Events</a>
                         </li>
                     }
+
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                    </li>
                 </ul>
 
-                <partial name="_LoginPartial"/>
+                <partial name="_LoginPartial" />
             </div>
         </div>
     </nav>
@@ -68,7 +79,7 @@
 
 <footer class="border-top footer text-muted">
     <div class="container">
-        &copy; 2025 - AubgEMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        &copy; @DateTime.UtcNow.Year - AubgEMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>
 </footer>
 

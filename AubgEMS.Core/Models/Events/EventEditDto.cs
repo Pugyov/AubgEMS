@@ -5,7 +5,7 @@ namespace AubgEMS.Core.Models.Events;
 public class EventEditDto
 {
     [Required]
-    public int Id { get; set; }                
+    public int Id { get; set; }
 
     [Required, MaxLength(200)]
     public string Title { get; set; } = string.Empty;
@@ -14,7 +14,7 @@ public class EventEditDto
     public string Description { get; set; } = string.Empty;
 
     [Required]
-    public DateTime StartTime { get; set; }    
+    public DateTime StartTime { get; set; }
 
     [Range(0, 100000)]
     public int Capacity { get; set; }

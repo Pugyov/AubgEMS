@@ -7,7 +7,9 @@ public interface IAttendanceService
 {
     Task<bool> JoinAsync(int eventId, string userId, CancellationToken ct = default);
     Task<bool> LeaveAsync(int eventId, string userId, CancellationToken ct = default);
-
     // My Events = (joined ∪ created), upcoming first
     Task<PageResult<EventListItemDto>> GetMyEventsAsync(string userId, PageQuery page, CancellationToken ct = default);
+    // AubgEMS.Core/Contracts/IAttendanceService.cs
+    Task<bool> IsJoinedAsync(int eventId, string userId, CancellationToken ct = default);
+
 }

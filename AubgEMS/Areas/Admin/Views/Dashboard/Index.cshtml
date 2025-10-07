@@ -1,11 +1,21 @@
 @{
     ViewData["Title"] = "Admin Dashboard";
 }
-<h1>Admin Dashboard</h1>
-    <p>Only admins should see this page.</p>
-    <ul>
-    <li><a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Refresh</a></li>
-    <li>(Later) Manage Clubs</li>
-    <li>(Later) Manage Events</li>
-    <li>(Later) Manage News</li>
-    </ul> 
+<h1 class="mb-3">Admin Dashboard</h1>
+<p class="text-muted">Only admins should see this page.</p>
+
+<ul class="list-group">
+    <li class="list-group-item">
+        <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Refresh</a>
+    </li>
+    <li class="list-group-item">
+        <a asp-area="Admin" asp-controller="News" asp-action="Index">Manage News</a>
+    </li>
+    <li class="list-group-item">
+        <a asp-area="Admin" asp-controller="Clubs" asp-action="Index">Manage Clubs</a>
+    </li>
+    <li class="list-group-item">
+        <a asp-area="Organizer" asp-controller="Events" asp-action="Index" asp-route-all="true">Manage Events</a>
+    </li>
+
+</ul>

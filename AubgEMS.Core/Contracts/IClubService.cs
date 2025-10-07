@@ -12,4 +12,6 @@ public interface IClubService
     Task<int> CreateAsync(ClubEditDto dto, CancellationToken ct = default);
     Task<bool> UpdateAsync(int id, ClubEditDto dto, CancellationToken ct = default);
     Task<bool> DeleteAsync(int id, CancellationToken ct = default);
+    Task<ClubEditDto?> GetForEditAsync(int id, CancellationToken ct = default);
+
 }

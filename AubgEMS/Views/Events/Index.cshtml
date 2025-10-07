@@ -1,0 +1,118 @@
+@using AubgEMS.Core.Models.Common
+@using AubgEMS.Core.Models.Events
+@model PageResult<EventListItemDto>
+
+@{
+    ViewData["Title"] = "Events";
+    var query = (AubgEMS.Core.Models.Events.EventQuery)ViewBag.Query;
+}
+
+<h1 class="mb-3">Events</h1>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-12 col-md-3">
+        <label class="form-label">Event Type</label>
+        <select class="form-select" name="EventTypeId" asp-items="ViewBag.EventTypes">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <div class="col-12 col-md-3">
+        <label class="form-label">Department</label>
+        <select class="form-select" name="DepartmentId" asp-items="ViewBag.Departments">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <div class="col-12 col-md-3">
+        <label class="form-label">Club</label>
+        <select class="form-select" name="ClubId" asp-items="ViewBag.Clubs">
+            <option value="">All</option>
+        </select>
+    </div>
+
+    <div class="col-12 col-md-3">
+        <label class="form-label">Search</label>
+        <input class="form-control" type="text" name="Search" value="@(query?.Search ?? "")" placeholder="title or description..." />
+    </div>
+
+    <input type="hidden" name="Page" value="@(query?.Page ?? 1)" />
+    <input type="hidden" name="PageSize" value="@(query?.PageSize ?? 10)" />
+
+    <div class="col-12 mt-2">
+        <button class="btn btn-primary">Apply</button>
+        <a class="btn btn-outline-secondary ms-2" asp-action="Index">Reset</a>
+    </div>
+</form>
+
+@if (Model.TotalCount == 0)
+{
+    <div class="alert alert-info">No events match your filters.</div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+        @foreach (var e in Model.Items)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    @if (!string.IsNullOrWhiteSpace(e.ImageUrl))
+                    {
+                        <img class="card-img-top" src="@e.ImageUrl" alt="@e.Title" />
+                    }
+                    <div class="card-body">
+                        <h5 class="card-title">@e.Title</h5>
+                        <p class="card-text mb-1"><strong>@e.EventTypeName</strong> · @e.ClubName</p>
+                        <p class="card-text text-muted mb-1">
+                            @e.StartTime.ToString("g")
+                            @if (!string.IsNullOrWhiteSpace(e.LocationName))
+                            {
+                                <span> · @e.LocationName</span>
+                            }
+                        </p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@e.Id">Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div>
+            Showing <strong>@Model.Items.Count</strong> of <strong>@Model.TotalCount</strong>
+        </div>
+
+        <div class="btn-group">
+            @{
+                var prevPage = Math.Max((query?.Page ?? 1) - 1, 1);
+                var nextPage = (query?.Page ?? 1) + 1;
+                var totalPages = (int)Math.Ceiling((double)Model.TotalCount / (query?.PageSize ?? 10));
+                if (nextPage > totalPages) nextPage = totalPages;
+            }
+
+            <a class="btn btn-outline-secondary @( (query?.Page ?? 1) <= 1 ? "disabled" : "" )"
+               asp-action="Index"
+               asp-route-EventTypeId="@query?.EventTypeId"
+               asp-route-DepartmentId="@query?.DepartmentId"
+               asp-route-ClubId="@query?.ClubId"
+               asp-route-Search="@query?.Search"
+               asp-route-Page="@prevPage"
+               asp-route-PageSize="@(query?.PageSize ?? 10)">Prev</a>
+
+            <span class="btn btn-outline-secondary disabled">
+                Page @(query?.Page ?? 1) / @totalPages
+            </span>
+
+            <a class="btn btn-outline-secondary @( (query?.Page ?? 1) >= totalPages ? "disabled" : "" )"
+               asp-action="Index"
+               asp-route-EventTypeId="@query?.EventTypeId"
+               asp-route-DepartmentId="@query?.DepartmentId"
+               asp-route-ClubId="@query?.ClubId"
+               asp-route-Search="@query?.Search"
+               asp-route-Page="@nextPage"
+               asp-route-PageSize="@(query?.PageSize ?? 10)">Next</a>
+        </div>
+    </div>
+}

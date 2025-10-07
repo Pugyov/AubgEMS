@@ -110,5 +110,20 @@ namespace AubgEMS.Core.Services
             await _db.SaveChangesAsync(ct);
             return true;
         }
+        public async Task<ClubEditDto?> GetForEditAsync(int id, CancellationToken ct = default)
+        {
+            return await _db.Clubs
+                .AsNoTracking()
+                .Where(c => c.Id == id)
+                .Select(c => new ClubEditDto
+                {
+                    Name = c.Name,
+                    Description = c.Description,
+                    DepartmentId = c.DepartmentId,
+                    OrganizerId = c.OrganizerId
+                })
+                .FirstOrDefaultAsync(ct);
+        }
+
     }
 }

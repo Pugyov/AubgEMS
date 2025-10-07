@@ -1,0 +1,32 @@
+@model AubgEMS.Core.Models.Events.EventDetailsDto
+@{
+    ViewData["Title"] = "Delete Event";
+}
+
+<h1>Delete Event</h1>
+<hr />
+
+@if (TempData["Error"] is string errMsg)
+{
+    <div class="alert alert-danger">@errMsg</div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">Title</dt>
+    <dd class="col-sm-9">@Model.Title</dd>
+
+    <dt class="col-sm-3">Start</dt>
+    <dd class="col-sm-9">@Model.StartTime.ToString("yyyy-MM-dd HH:mm")</dd>
+
+    <dt class="col-sm-3">Club</dt>
+    <dd class="col-sm-9">@Model.ClubName</dd>
+
+    <dt class="col-sm-3">Type</dt>
+    <dd class="col-sm-9">@Model.EventTypeName</dd>
+</dl>
+
+<form asp-area="Organizer" asp-controller="Events" asp-action="Delete" method="post">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button class="btn btn-danger">Delete</button>
+    <a asp-area="Organizer" asp-controller="Events" asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+</form>

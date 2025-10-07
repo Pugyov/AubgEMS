@@ -1,0 +1,50 @@
+@using AubgEMS.Core.Models.Common
+@using AubgEMS.Core.Models.News
+@model PageResult<NewsListItemDto>
+
+@{
+    ViewData["Title"] = "News";
+    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+    if (totalPages < 1) totalPages = 1;
+    var prevPage = Model.Page > 1 ? Model.Page - 1 : 1;
+    var nextPage = Model.Page < totalPages ? Model.Page + 1 : totalPages;
+}
+
+<h1 class="mb-3">News</h1>
+
+@if (Model.Items.Count == 0)
+{
+    <p>No news yet.</p>
+}
+else
+{
+    <div class="list-group mb-3">
+        @foreach (var n in Model.Items)
+        {
+            <a class="list-group-item list-group-item-action" asp-controller="News" asp-action="Details" asp-route-id="@n.Id">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">@n.Title</h5>
+                    <small>@n.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm") UTC</small>
+                </div>
+                @if (!string.IsNullOrWhiteSpace(n.ImageUrl))
+                {
+                    <img src="@n.ImageUrl" alt="news image" class="img-fluid mt-2" style="max-height:180px;object-fit:cover;" />
+                }
+            </a>
+        }
+    </div>
+
+    <nav aria-label="News pagination">
+        <ul class="pagination">
+            <li class="page-item @(Model.Page == 1 ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@prevPage">Previous</a>
+            </li>
+            <li class="page-item disabled">
+                <span class="page-link">Page @Model.Page of @totalPages</span>
+            </li>
+            <li class="page-item @(Model.Page == totalPages ? "disabled" : "")">
+                <a class="page-link" asp-action="Index" asp-route-page="@nextPage">Next</a>
+            </li>
+        </ul>
+    </nav>
+}

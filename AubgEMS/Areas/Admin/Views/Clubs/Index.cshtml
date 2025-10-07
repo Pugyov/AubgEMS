@@ -1,0 +1,98 @@
+@model PageResult<ClubListItemDto>
+@{
+    ViewData["Title"] = "Manage Clubs";
+
+    var departments = ViewBag.Departments as Microsoft.AspNetCore.Mvc.Rendering.SelectList;
+    int? deptId     = (int?)ViewBag.SelectedDepartmentId;
+    string? search  = ViewBag.Search as string;
+    int pageSize    = ViewBag.PageSize is int ps ? ps : Model.PageSize;
+
+    var totalPages  = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
+    var page        = Model.Page;
+    var prevDisabled = page <= 1 ? "disabled" : "";
+    var nextDisabled = page >= totalPages ? "disabled" : "";
+}
+
+<h1 class="mb-3">Manage Clubs</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">Create Club</a>
+</p>
+
+<form method="get" asp-action="Index" class="row g-2 mb-4">
+    <div class="col-sm-4">
+        <label class="form-label">Department</label>
+        <select class="form-select" name="departmentId" asp-items="departments">
+            <option value="">(All)</option>
+        </select>
+    </div>
+    <div class="col-sm-4">
+        <label class="form-label">Search</label>
+        <input class="form-control" type="text" name="search" value="@search" placeholder="name contains..." />
+    </div>
+    <div class="col-sm-2">
+        <label class="form-label">Page size</label>
+        <input class="form-control" type="number" name="pageSize" value="@pageSize" min="1" />
+    </div>
+    <div class="col-sm-2 d-flex align-items-end">
+        <button class="btn btn-secondary me-2">Filter</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Reset</a>
+    </div>
+</form>
+
+@if (!Model.Items.Any())
+{
+    <div class="alert alert-info">No clubs found.</div>
+}
+else
+{
+    <table class="table table-striped align-middle">
+        <thead>
+        <tr>
+            <th>Name</th>
+            <th>Department</th>
+            <th style="width:160px;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var c in Model.Items)
+        {
+            <tr>
+                <td>@c.Name</td>
+                <td>@c.DepartmentName</td>
+                <td class="text-end">
+                    <a class="btn btn-sm btn-warning" asp-action="Edit" asp-route-id="@c.Id">Edit</a>
+                    <a class="btn btn-sm btn-danger" asp-action="Delete" asp-route-id="@c.Id">Delete</a>
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    @if (totalPages > 1)
+    {
+        <nav aria-label="pager">
+            <ul class="pagination">
+                <li class="page-item @prevDisabled">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-departmentId="@deptId"
+                       asp-route-search="@search"
+                       asp-route-page="@(page - 1)"
+                       asp-route-pageSize="@pageSize">Prev</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link">Page @(page) of @(totalPages)</span>
+                </li>
+                <li class="page-item @nextDisabled">
+                    <a class="page-link"
+                       asp-action="Index"
+                       asp-route-departmentId="@deptId"
+                       asp-route-search="@search"
+                       asp-route-page="@(page + 1)"
+                       asp-route-pageSize="@pageSize">Next</a>
+                </li>
+            </ul>
+        </nav>
+    }
+}
