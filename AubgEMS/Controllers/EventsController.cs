@@ -25,19 +25,28 @@ namespace AubgEMS.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index([FromQuery] EventQuery query, CancellationToken ct)
         {
-            if (query.Page < 1) query = new EventQuery(1, query.PageSize);
-            if (query.PageSize < 1) query = new EventQuery(query.Page, 10);
+            // Create a normalized copy without losing filters (init-only props safe via initializer)
+            var normalized = new EventQuery(
+                page:    query.Page     < 1 ? 1  : query.Page,
+                pageSize:query.PageSize < 1 ? 10 : query.PageSize)
+            {
+                EventTypeId  = query.EventTypeId,
+                DepartmentId = query.DepartmentId,
+                ClubId       = query.ClubId,
+                Search       = query.Search
+            };
 
-            var result = await _events.GetAllAsync(query, ct);
+            var result = await _events.GetAllAsync(normalized, ct);
 
+            // Lookups for filters (preselect current query values)
             var eventTypes  = await _lookups.EventTypesAsync(ct);
             var departments = await _lookups.DepartmentsAsync(ct);
-            var clubs       = await _lookups.ClubsAsync(query.DepartmentId, ct);
+            var clubs       = await _lookups.ClubsAsync(normalized.DepartmentId, ct);
 
-            ViewBag.EventTypes  = new SelectList(eventTypes,  "Id", "Name", query.EventTypeId);
-            ViewBag.Departments = new SelectList(departments, "Id", "Name", query.DepartmentId);
-            ViewBag.Clubs       = new SelectList(clubs,       "Id", "Name", query.ClubId);
-            ViewBag.Query = query;
+            ViewBag.EventTypes  = new SelectList(eventTypes,  "Id", "Name", normalized.EventTypeId);
+            ViewBag.Departments = new SelectList(departments, "Id", "Name", normalized.DepartmentId);
+            ViewBag.Clubs       = new SelectList(clubs,       "Id", "Name", normalized.ClubId);
+            ViewBag.Query       = normalized; // keep current filters/search in the view
 
             return View(result);
         }
