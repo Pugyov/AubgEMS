@@ -9,7 +9,31 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
+@functions{
+    // Area-aware "active" helper. Pass only what you want to match.
+    // Examples:
+    //   @Active(controller: "Events", area: "")                 -> public Events (any action)
+    //   @Active(area: "Admin")                                   -> any Admin area page
+    //   @Active(controller: "Home", action: "Privacy", area: "") -> only Home/Privacy
+    string Active(string? controller = null, string? action = null, string? area = null)
+    {
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+        var currentAction     = ViewContext.RouteData.Values["action"]?.ToString();
+        var currentArea       = ViewContext.RouteData.Values["area"]?.ToString() ?? "";
+
+        bool controllerMatch = controller is null || string.Equals(currentController, controller, StringComparison.OrdinalIgnoreCase);
+        bool actionMatch     = action     is null || string.Equals(currentAction,     action,     StringComparison.OrdinalIgnoreCase);
+        bool areaMatch       = area       is null || string.Equals(currentArea,       area,       StringComparison.OrdinalIgnoreCase);
+
+        return (controllerMatch && actionMatch && areaMatch) ? "active" : "";
+    }
+}
+@{
+    var isSignedIn  = User?.Identity?.IsAuthenticated ?? false;
+    var isAdmin     = User?.IsInRole(RoleNames.Admin) ?? false;
+    var isOrganizer = User?.IsInRole(RoleNames.Organizer) ?? false;
+}
 <header>
     <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
         <div class="container-fluid">
@@ -20,48 +44,54 @@
             </button>
 
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        <a class="nav-link @Active(controller: "Home", action: "Index", area: "")"
+                           asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="News" asp-action="Index">News</a>
+                        <a class="nav-link @Active(controller: "Events", area: "")"
+                           asp-area="" asp-controller="Events" asp-action="Index">Events</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Events" asp-action="Index">Events</a>
+                        <a class="nav-link @Active(controller: "Clubs", area: "")"
+                           asp-area="" asp-controller="Clubs" asp-action="Index">Clubs</a>
                     </li>
-
-                    @* Admin link (admins only) *@
-                    @if (User.IsInRole(RoleNames.Admin))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
-                        </li>
-                    }
-
-                    @* Organizer hub (organizers OR admins) *@
-                    @if (User.IsInRole(RoleNames.Organizer) || User.IsInRole(RoleNames.Admin))
-                    {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="Organizer" asp-controller="Events" asp-action="Index">Organizer</a>
-                        </li>
-                    }
-
                     <li class="nav-item">
-                        <!-- FIX: clear ambient area -->
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Clubs" asp-action="Index">Clubs</a>
+                        <a class="nav-link @Active(controller: "News", area: "")"
+                           asp-area="" asp-controller="News" asp-action="Index">News</a>
                     </li>
 
                     @* My Events (any signed-in user) *@
-                    @if (User.Identity?.IsAuthenticated ?? false)
+                    @if (isSignedIn)
                     {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="My" asp-action="Events">My Events</a>
+                            <a class="nav-link @Active(controller: "My", area: "")"
+                               asp-area="" asp-controller="My" asp-action="Events">My Events</a>
+                        </li>
+                    }
+
+                    @* Admin link (active for any Admin area page) *@
+                    @if (isAdmin)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @Active(area: "Admin")"
+                               asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                        </li>
+                    }
+
+                    @* Organizer hub (active for any Organizer area page) *@
+                    @if (isOrganizer || isAdmin)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link @Active(area: "Organizer")"
+                               asp-area="Organizer" asp-controller="Events" asp-action="Index">Organizer</a>
                         </li>
                     }
 
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        <a class="nav-link @Active(controller: "Home", action: "Privacy", area: "")"
+                           asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
                 </ul>
 
@@ -71,13 +101,13 @@
     </nav>
 </header>
 
-<div class="container">
+<div class="container flex-grow-1">
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
 </div>
 
-<footer class="border-top footer text-muted">
+<footer class="border-top footer text-muted mt-auto">
     <div class="container">
         &copy; @DateTime.UtcNow.Year - AubgEMS - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
     </div>

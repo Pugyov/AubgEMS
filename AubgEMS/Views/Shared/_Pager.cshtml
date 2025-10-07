@@ -1,0 +1,29 @@
+@model AubgEMS.Models.PagerViewModel
+@{
+    var prevDisabled = Model.Page <= 1 ? "disabled" : "";
+    var nextDisabled = Model.Page >= Model.TotalPages ? "disabled" : "";
+    var baseRoutes = new Dictionary<string,string?>(Model.RouteValues ?? new Dictionary<string,string?>())
+    {
+        ["pageSize"] = Model.PageSize.ToString()
+    };
+}
+<nav aria-label="Pagination">
+    <ul class="pagination mb-0">
+        <li class="page-item @prevDisabled">
+            <a class="page-link"
+               asp-controller="@Model.Controller"
+               asp-action="@Model.Action"
+               asp-all-route-data="@(new Dictionary<string,string?>(baseRoutes) { ["page"] = (Model.Page - 1).ToString() })">
+                Prev
+            </a>
+        </li>
+        <li class="page-item @nextDisabled">
+            <a class="page-link"
+               asp-controller="@Model.Controller"
+               asp-action="@Model.Action"
+               asp-all-route-data="@(new Dictionary<string,string?>(baseRoutes) { ["page"] = (Model.Page + 1).ToString() })">
+                Next
+            </a>
+        </li>
+    </ul>
+</nav>

@@ -2,7 +2,6 @@
 
 @{
     ViewData["Title"] = "My Events";
-    var totalPages = (int)Math.Ceiling((double)Model.TotalCount / Model.PageSize);
 }
 
 <h1>My Events</h1>
@@ -67,24 +66,16 @@ else
 
     <div class="d-flex justify-content-between align-items-center">
         <div class="text-muted">
-            Page @Model.Page of @totalPages • @Model.TotalCount total
+            Page @Model.Page • @Model.TotalCount total
         </div>
-        <nav>
-            <ul class="pagination mb-0">
-                <li class="page-item @(Model.Page <= 1 ? "disabled" : "")">
-                    <a class="page-link"
-                       asp-action="Events"
-                       asp-route-page="@(Model.Page - 1)"
-                       asp-route-pageSize="@Model.PageSize">Prev</a>
-                </li>
-                <li class="page-item @(Model.Page >= totalPages ? "disabled" : "")">
-                    <a class="page-link"
-                       asp-action="Events"
-                       asp-route-page="@(Model.Page + 1)"
-                       asp-route-pageSize="@Model.PageSize">Next</a>
-                </li>
-            </ul>
-        </nav>
+
+        @await Html.PartialAsync("_Pager", new AubgEMS.Models.PagerViewModel {
+            Page = Model.Page,
+            PageSize = Model.PageSize,
+            TotalCount = Model.TotalCount,
+            Controller = "My",
+            Action = "Events"
+        })
     </div>
 }
 

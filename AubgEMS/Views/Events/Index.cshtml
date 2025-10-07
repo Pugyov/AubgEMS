@@ -81,38 +81,25 @@ else
 
     <div class="d-flex justify-content-between align-items-center mt-4">
         <div>
-            Showing <strong>@Model.Items.Count</strong> of <strong>@Model.TotalCount</strong>
+            Page @Model.Page • @Model.TotalCount total
         </div>
 
-        <div class="btn-group">
-            @{
-                var prevPage = Math.Max((query?.Page ?? 1) - 1, 1);
-                var nextPage = (query?.Page ?? 1) + 1;
-                var totalPages = (int)Math.Ceiling((double)Model.TotalCount / (query?.PageSize ?? 10));
-                if (nextPage > totalPages) nextPage = totalPages;
-            }
-
-            <a class="btn btn-outline-secondary @( (query?.Page ?? 1) <= 1 ? "disabled" : "" )"
-               asp-action="Index"
-               asp-route-EventTypeId="@query?.EventTypeId"
-               asp-route-DepartmentId="@query?.DepartmentId"
-               asp-route-ClubId="@query?.ClubId"
-               asp-route-Search="@query?.Search"
-               asp-route-Page="@prevPage"
-               asp-route-PageSize="@(query?.PageSize ?? 10)">Prev</a>
-
-            <span class="btn btn-outline-secondary disabled">
-                Page @(query?.Page ?? 1) / @totalPages
-            </span>
-
-            <a class="btn btn-outline-secondary @( (query?.Page ?? 1) >= totalPages ? "disabled" : "" )"
-               asp-action="Index"
-               asp-route-EventTypeId="@query?.EventTypeId"
-               asp-route-DepartmentId="@query?.DepartmentId"
-               asp-route-ClubId="@query?.ClubId"
-               asp-route-Search="@query?.Search"
-               asp-route-Page="@nextPage"
-               asp-route-PageSize="@(query?.PageSize ?? 10)">Next</a>
-        </div>
+        @{
+            // Preserve current filters in pager links
+            var routes = new Dictionary<string,string?> {
+                ["EventTypeId"]  = query?.EventTypeId?.ToString(),
+                ["DepartmentId"] = query?.DepartmentId?.ToString(),
+                ["ClubId"]       = query?.ClubId?.ToString(),
+                ["Search"]       = query?.Search
+            };
+        }
+        @await Html.PartialAsync("_Pager", new AubgEMS.Models.PagerViewModel {
+            Page = Model.Page,
+            PageSize = Model.PageSize,
+            TotalCount = Model.TotalCount,
+            Controller = "Events",
+            Action = "Index",
+            RouteValues = routes
+        })
     </div>
 }
