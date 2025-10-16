@@ -1,0 +1,74 @@
+@* Views/Shared/_Faq.cshtml *@
+<div class="card shadow-sm mb-4">
+  <div class="card-header">
+    <h2 class="h5 mb-0">FAQ</h2>
+  </div>
+  <div class="card-body">
+    <div class="accordion" id="faqAccordion">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq1h">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1" aria-expanded="true" aria-controls="faq1">
+            How do I join an event?
+          </button>
+        </h2>
+        <div id="faq1" class="accordion-collapse collapse show" aria-labelledby="faq1h" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Open the event’s details page and click <strong>Join</strong>. You need to be signed in.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq2h">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2" aria-expanded="false" aria-controls="faq2">
+            Can I leave an event I joined?
+          </button>
+        </h2>
+        <div id="faq2" class="accordion-collapse collapse" aria-labelledby="faq2h" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Yes. On the event page click <strong>Leave</strong>. It’s instant and reversible while registration is open.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq3h">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3" aria-expanded="false" aria-controls="faq3">
+            Who can create or edit events?
+          </button>
+        </h2>
+        <div id="faq3" class="accordion-collapse collapse" aria-labelledby="faq3h" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Organizers (and Admins) can create and edit events. Organizers can manage only the events they own.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq4h">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4" aria-expanded="false" aria-controls="faq4">
+            Where do I see my joined or created events?
+          </button>
+        </h2>
+        <div id="faq4" class="accordion-collapse collapse" aria-labelledby="faq4h" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Go to <strong>My Events</strong> in the navbar. It shows events you’ve joined or created, upcoming first.
+          </div>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="faq5h">
+          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5" aria-expanded="false" aria-controls="faq5">
+            Are events free and is there a capacity?
+          </button>
+        </h2>
+        <div id="faq5" class="accordion-collapse collapse" aria-labelledby="faq5h" data-bs-parent="#faqAccordion">
+          <div class="accordion-body">
+            Most events are free. Each event lists its <strong>Capacity</strong>; once full, new joins are blocked.
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

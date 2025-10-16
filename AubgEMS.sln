@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AubgEMS.Core", "AubgEMS.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AubgEMS.Infrastructure", "AubgEMS.Infrastructure\AubgEMS.Infrastructure.csproj", "{D2621318-A592-4929-AFC3-AAD0B8D827B2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AubgEMS.Tests", "AubgEMS.Tests\AubgEMS.Tests.csproj", "{8EF699D5-8914-4402-9C9D-7C6A8559F5A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -24,5 +26,9 @@ Global
 		{D2621318-A592-4929-AFC3-AAD0B8D827B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D2621318-A592-4929-AFC3-AAD0B8D827B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D2621318-A592-4929-AFC3-AAD0B8D827B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8EF699D5-8914-4402-9C9D-7C6A8559F5A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8EF699D5-8914-4402-9C9D-7C6A8559F5A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8EF699D5-8914-4402-9C9D-7C6A8559F5A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8EF699D5-8914-4402-9C9D-7C6A8559F5A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

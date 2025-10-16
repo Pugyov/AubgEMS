@@ -24,8 +24,12 @@ namespace AubgEMS.Controllers
             if (page < 1) page = 1;
             if (pageSize <= 0 || pageSize > 100) pageSize = 10;
 
-            // [Authorize] ensures a user exists; NameIdentifier is safe to read
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
+            // explicit guard so direct (unit test) calls behave like runtime
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Challenge();
+            }
 
             var result = await _attendance.GetMyEventsAsync(
                 userId,

@@ -19,6 +19,7 @@ builder.Services.AddScoped<IClubService, ClubService>();
 builder.Services.AddScoped<INewsService, NewsService>();
 builder.Services.AddScoped<IAttendanceService, AttendanceService>();
 builder.Services.AddScoped<ILookupService, LookupService>();
+builder.Services.AddScoped<IAnalyticsService, AnalyticsService>();
 
 // Authorization policies
 builder.Services.AddAuthorization(options =>

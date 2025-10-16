@@ -34,3 +34,6 @@ body {
   font-weight: 600;
   border-bottom: 2px solid currentColor;
 }
+
+footer .link-body-emphasis:hover { text-decoration: underline; }
+footer .bi { vertical-align: -0.125em; }

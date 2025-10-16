@@ -1,6 +1,138 @@
 ﻿@{
-    ViewData["Title"] = "Privacy Policy";
+    ViewData["Title"] = "Privacy";
+    var updated = DateTime.UtcNow.ToString("MMMM dd, yyyy");
 }
-<h1>@ViewData["Title"]</h1>
 
-<p>Use this page to detail your site's privacy policy.</p>
+<div class="row">
+    <div class="col-lg-8">
+        <h1 class="mb-3">Privacy Notice</h1>
+        <p class="text-muted">Last updated: @updated</p>
+
+        <p>
+            This notice explains what personal data the AubgEMS website (“we”, “us”) collects,
+            how we use it, and the choices you have. It applies to this site and the services
+            available through it.
+        </p>
+
+        <h2 class="h5 mt-4" id="data-we-collect">1) Data we collect</h2>
+        <ul>
+            <li><strong>Account data:</strong> email/username, password (hashed), and roles (Student/Organizer/Admin).</li>
+            <li><strong>Profile & activity:</strong> events you create or join, timestamps, basic form inputs.</li>
+            <li><strong>Technical:</strong> standard logs (IP address, user agent, request time) for security and debugging.</li>
+            <li><strong>Cookies:</strong> essential auth/anti-forgery/session cookies required for the site to work.</li>
+        </ul>
+
+        <h2 class="h5 mt-4" id="how-we-use">2) How we use your data</h2>
+        <ul>
+            <li>Provide core features (sign in, join/leave events, “My Events”).</li>
+            <li>Operate, secure, and improve the website.</li>
+            <li>Administer organizer/admin functions (e.g., managing events, news, clubs).</li>
+            <li>Respond to support requests or important service notices.</li>
+        </ul>
+
+        <h2 class="h5 mt-4" id="legal-bases">3) Legal bases (GDPR)</h2>
+        <p>
+            Where applicable, we process data under: <em>contract necessity</em> (to deliver the site’s features),
+            <em>legitimate interests</em> (security, service improvement), and <em>consent</em> when you knowingly submit
+            optional information.
+        </p>
+
+        <h2 class="h5 mt-4" id="sharing">4) Sharing</h2>
+        <ul>
+            <li>With site administrators and authorized organizers to run events and manage content.</li>
+            <li>With service providers (e.g., hosting/database) strictly to operate the site.</li>
+            <li>When required by law or to protect the safety and security of the service.</li>
+        </ul>
+        <p class="mb-0"><strong>We do not sell your personal data.</strong></p>
+
+        <h2 class="h5 mt-4" id="retention">5) Retention</h2>
+        <p>
+            We keep your account and related event data while your account is active.
+            If you delete your account (or request deletion), we remove or anonymize personal data
+            within a reasonable period, subject to legal or operational requirements (e.g., audit logs).
+        </p>
+
+        <h2 class="h5 mt-4" id="your-rights">6) Your rights</h2>
+        <p>
+            You may have the right to access, correct, delete, restrict, or object to processing of your data,
+            and to data portability. To exercise these rights, contact us using the information below.
+            You can also lodge a complaint with your local data protection authority.
+        </p>
+
+        <h2 class="h5 mt-4" id="cookies">7) Cookies we use</h2>
+        <div class="table-responsive">
+            <table class="table table-sm table-bordered align-middle">
+                <thead class="table-light">
+                <tr>
+                    <th style="width: 25%">Cookie</th>
+                    <th style="width: 25%">Type</th>
+                    <th>Purpose</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>.AspNetCore.Identity.Application</td>
+                    <td>Essential</td>
+                    <td>Keeps you signed in (authentication cookie).</td>
+                </tr>
+                <tr>
+                    <td>.AspNetCore.Antiforgery.*</td>
+                    <td>Essential</td>
+                    <td>Protects forms from CSRF attacks (anti-forgery token).</td>
+                </tr>
+                <tr>
+                    <td>.AspNetCore.Session (if enabled)</td>
+                    <td>Essential</td>
+                    <td>Stores temporary session data to support site features.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <p class="mb-0">
+            We do <strong>not</strong> use advertising cookies. If analytics are introduced later, we will update this notice.
+        </p>
+
+        <h2 class="h5 mt-4" id="children">8) Students & minors</h2>
+        <p>
+            This site is intended for university use. If you are under the applicable age of consent for your
+            region, please use the site only with appropriate permission or supervision as required by your
+            institution’s policies.
+        </p>
+
+        <h2 class="h5 mt-4" id="security">9) Security</h2>
+        <p>
+            We take reasonable technical and organizational measures to protect your data. No method of
+            transmission or storage is 100% secure, so we cannot guarantee absolute security.
+        </p>
+
+        <h2 class="h5 mt-4" id="changes">10) Changes to this notice</h2>
+        <p>
+            We may update this notice to reflect changes to the site or legal requirements. We will revise
+            the “Last updated” date above and, where appropriate, provide additional notice.
+        </p>
+
+        <h2 class="h5 mt-4" id="contact">11) Contact</h2>
+        <p class="mb-0">
+            Questions or privacy requests? Email <a href="mailto:ndp221@aubg.edu">ndp221@aubg.edu</a>
+        </p>
+
+        <div class="alert alert-warning mt-4 small mb-0">
+            <strong>Note:</strong> This page is an informational template and not legal advice.
+            Please adapt it to your institution’s policies and applicable laws.
+        </div>
+    </div>
+
+    <div class="col-lg-4 mt-4 mt-lg-0">
+        <div class="card shadow-sm">
+            <div class="card-header">Summary</div>
+            <div class="card-body">
+                <ul class="list-unstyled small mb-0">
+                    <li>✔ Essential cookies only</li>
+                    <li>✔ No data sales</li>
+                    <li>✔ Account & event data for service delivery</li>
+                    <li>✔ You can request access/deletion</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
