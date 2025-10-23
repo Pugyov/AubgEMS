@@ -4,60 +4,117 @@
 
 @{
     ViewData["Title"] = "News";
+
+    var items = (Model.Items ?? Enumerable.Empty<NewsListItemDto>()).ToList();
+    var lead  = items.ElementAtOrDefault(0);
+    var rest  = items.Skip(1).ToList(); // everything after the lead goes to the grid
+
+    string FDate(DateTime dt)     => dt.ToLocalTime().ToString("dd MMM yyyy");
+    string FDateTime(DateTime dt) => dt.ToLocalTime().ToString("dd MMM yyyy · HH:mm");
 }
 
-<!-- Header -->
+<!-- Breadcrumb -->
 <nav aria-label="breadcrumb" class="mb-2">
-    <ol class="breadcrumb small">
-        <li class="breadcrumb-item">
-            <a asp-controller="Home" asp-action="Index">Home</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">News</li>
-    </ol>
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">News</li>
+  </ol>
 </nav>
 
-<div class="mb-3">
-    <h1 class="page-title">News</h1>
-    <p class="page-subtitle">Latest updates from AUBG clubs.</p>
-</div>
+<!-- Section title (brand blue) -->
+<h1 class="text-center mb-3 text-primary fw-bold text-uppercase" style="letter-spacing:.02em;">AUBG News</h1>
 
-@if (Model.Items.Count == 0)
+@if (!items.Any())
 {
     @await Html.PartialAsync("_EmptyState", new AubgEMS.Models.EmptyStateViewModel {
         Icon = "bi-newspaper",
         Title = "No news yet",
-        Message = "Check back soon for updates."
+        Message = "Once clubs start posting, you’ll see their updates here.",
+        ActionText = "Browse events",
+        ActionController = "Events",
+        ActionAction = "Index"
     })
 }
 else
 {
-    <div class="list-group mb-3">
-        @foreach (var n in Model.Items)
-        {
-            <a class="list-group-item list-group-item-action" asp-controller="News" asp-action="Details" asp-route-id="@n.Id">
-                <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">@n.Title</h5>
-                    <small>@n.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</small>
+    <!-- Lead module: left text, right hero image (NO right rail tile) -->
+    <div class="news-lead rounded-4 border bg-white shadow-sm p-3 p-lg-4 mb-4">
+        <div class="row g-4 align-items-stretch">
+            <!-- Left: lead text -->
+            <div class="col-lg-5">
+                <div class="h-100 d-flex flex-column">
+                    <a class="text-decoration-none" asp-controller="News" asp-action="Details" asp-route-id="@lead!.Id">
+                        <h2 class="lead-headline mb-2 text-primary">@lead.Title</h2>
+                    </a>
+                    <div class="text-muted small mb-2">@FDateTime(lead.CreatedAtUtc)</div>
+                    <p class="mb-3 text-body-secondary">Latest headline from AUBG clubs and organizers.</p>
+                    <div class="mt-auto">
+                        <a class="btn btn-primary btn-lg px-3"
+                           asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
+                            Read full story
+                        </a>
+                    </div>
                 </div>
-                @if (!string.IsNullOrWhiteSpace(n.ImageUrl))
-                {
-                    <img src="@n.ImageUrl" alt="news image" class="img-fluid mt-2" style="max-height:180px;object-fit:cover;" />
-                }
-            </a>
-        }
-    </div>
+            </div>
 
-    <div class="d-flex justify-content-between align-items-center">
-        <div class="text-muted">
-            Page @Model.Page • @Model.TotalCount total
+            <!-- Right: hero image -->
+            <div class="col-lg-7">
+                <a class="d-block h-100 text-decoration-none"
+                   asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
+                    <div class="ratio rounded-3 overflow-hidden" style="--bs-aspect-ratio: 56%;">
+                        @if (!string.IsNullOrWhiteSpace(lead.ImageUrl))
+                        {
+                            <img class="img-cover" src="@lead.ImageUrl" alt="@lead.Title" />
+                        }
+                        else
+                        {
+                            <div class="img-placeholder"></div>
+                        }
+                    </div>
+                </a>
+            </div>
         </div>
-
-        @await Html.PartialAsync("_Pager", new AubgEMS.Models.PagerViewModel {
-            Page = Model.Page,
-            PageSize = Model.PageSize,
-            TotalCount = Model.TotalCount,
-            Controller = "News",
-            Action = "Index"
-        })
     </div>
+    <!-- Grid of more stories (includes what used to be the right rail) -->
+    @if (rest.Any())
+    {
+        <div class="row g-4">
+            @foreach (var n in rest)
+            {
+                <div class="col-12 col-md-6 col-lg-4">
+                    <a class="card h-100 shadow-sm news-card text-decoration-none"
+                       asp-controller="News" asp-action="Details" asp-route-id="@n.Id">
+                        <div class="ratio" style="--bs-aspect-ratio: 56%;">
+                            @if (!string.IsNullOrWhiteSpace(n.ImageUrl))
+                            {
+                                <img class="img-cover" src="@n.ImageUrl" alt="@n.Title" />
+                            }
+                            else
+                            {
+                                <div class="img-placeholder"></div>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <div class="news-meta mb-1">@FDate(n.CreatedAtUtc)</div>
+                            <h3 class="h6 mb-0 line-clamp-2">@n.Title</h3>
+                        </div>
+                    </a>
+                </div>
+            }
+        </div>
+    }
+
+    <!-- Pager -->
+    @if (Model.TotalCount > Model.PageSize)
+    {
+        <div class="d-flex justify-content-end mt-4">
+            @await Html.PartialAsync("_Pager", new AubgEMS.Models.PagerViewModel {
+                Page = Model.Page,
+                PageSize = Model.PageSize,
+                TotalCount = Model.TotalCount,
+                Controller = "News",
+                Action = "Index"
+            })
+        </div>
+    }
 }

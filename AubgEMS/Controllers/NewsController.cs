@@ -28,5 +28,25 @@ namespace AubgEMS.Controllers
             if (model is null) return NotFound();
             return View(model);
         }
+        [HttpGet]
+        [AllowAnonymous]
+        public async Task<IActionResult> Details(int id, CancellationToken ct)
+        {
+            var model = await _news.GetDetailsAsync(id);
+            if (model is null) return NotFound();
+
+            // Get a pool and pick up to 9 random items (excluding the current one)
+            var page = await _news.GetAllAsync(new PageQuery(page: 1, pageSize: 18), ct);
+            var more = (page.Items ?? Enumerable.Empty<NewsListItemDto>())
+                .Where(x => x.Id != id)
+                .OrderBy(_ => Guid.NewGuid())
+                .Take(9)
+                .ToList();
+
+            ViewBag.MoreNews = more;
+            return View(model);
+        }
     }
+    
+    
 }

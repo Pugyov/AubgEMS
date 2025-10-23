@@ -70,22 +70,22 @@
                     </li>
                     <li class="nav-item">
                         @{
-                            var aClubs = Active(controller: "Clubs", area: "");
-                        }
-                        <a class="nav-link px-2 @aClubs"
-                           aria-current="@(aClubs == "active" ? "page" : null)"
-                           asp-area="" asp-controller="Clubs" asp-action="Index">
-                            Clubs
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        @{
                             var aNews = Active(controller: "News", area: "");
                         }
                         <a class="nav-link px-2 @aNews"
                            aria-current="@(aNews == "active" ? "page" : null)"
                            asp-area="" asp-controller="News" asp-action="Index">
                             News
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        @{
+                            var aClubs = Active(controller: "Clubs", area: "");
+                        }
+                        <a class="nav-link px-2 @aClubs"
+                           aria-current="@(aClubs == "active" ? "page" : null)"
+                           asp-area="" asp-controller="Clubs" asp-action="Index">
+                            Clubs
                         </a>
                     </li>
 

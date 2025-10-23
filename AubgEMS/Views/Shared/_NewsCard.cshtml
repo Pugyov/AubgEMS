@@ -1,0 +1,16 @@
+@using AubgEMS.Core.Models.News
+@model NewsListItemDto
+
+<div class="card h-100 shadow-sm news-card">
+    @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+    {
+        <img class="card-img-top news-card-img" src="@Model.ImageUrl" alt="@Model.Title" />
+    }
+    <div class="card-body">
+        <div class="text-muted small mb-1">
+            @Model.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")
+        </div>
+        <h3 class="h6 card-title mb-2">@Model.Title</h3>
+        <a class="stretched-link" asp-controller="News" asp-action="Details" asp-route-id="@Model.Id">Read</a>
+    </div>
+</div>
