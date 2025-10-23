@@ -4,45 +4,61 @@
     ViewData["Title"] = "Home";
 }
 
-<div class="p-4 p-md-5 mb-4 bg-light rounded-3 border">
-    <div class="container-fluid py-3">
-        <h1 class="display-6">Welcome to AubgEMS</h1>
-        <p class="lead text-muted mb-3">
+<!-- Hero -->
+<section class="hero p-4 p-md-5 mb-4">
+    <div class="container py-3">
+        <h1 class="display-6 fw-semibold mb-2">Welcome to AubgEMS</h1>
+        <p class="lead mb-3" style="opacity:.9;">
             Discover upcoming events and the latest news from AUBG clubs.
         </p>
-        <a asp-controller="Events" asp-action="Index" class="btn btn-primary me-2">Browse Events</a>
-        <a asp-controller="News" asp-action="Index" class="btn btn-outline-primary">All News</a>
+        <div class="d-flex flex-wrap gap-2">
+            <a asp-controller="Events" asp-action="Index" class="btn btn-light">Browse Events</a>
+            <a asp-controller="News" asp-action="Index" class="btn btn-outline-light">All News</a>
+        </div>
     </div>
-</div>
+</section>
 
-<h2 class="h5 mb-3">Latest News</h2>
-@if (!(Model?.Any() ?? false))
-{
-    <div class="alert alert-info">No news yet.</div>
-}
-else
-{
-    <div class="row g-3">
-        @foreach (var n in Model)
-        {
-            <div class="col-md-4">
-                <div class="card h-100 shadow-sm">
-                    @if (!string.IsNullOrWhiteSpace(n.ImageUrl))
-                    {
-                        <img class="card-img-top" src="@n.ImageUrl" alt="@n.Title" />
-                    }
-                    <div class="card-body">
-                        <h3 class="h6 card-title mb-1">@n.Title</h3>
-                        <div class="text-muted small mb-2">
-                            @n.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")
+<!-- Latest News -->
+<section aria-labelledby="home-latest-news">
+    <h2 id="home-latest-news" class="h5 mb-3">Latest News</h2>
+
+    @if (!(Model?.Any() ?? false))
+    {
+        @await Html.PartialAsync("_EmptyState", new AubgEMS.Models.EmptyStateViewModel {
+            Icon = "bi-newspaper",
+            Title = "No news yet",
+            Message = "Check back soon for announcements and updates.",
+            ActionText = "Browse events",
+            ActionController = "Events",
+            ActionAction = "Index"
+        })
+    }
+    else
+    {
+        <div class="row g-3">
+            @foreach (var n in Model!)
+            {
+                <div class="col-md-4">
+                    <div class="card h-100 shadow-sm">
+                        @if (!string.IsNullOrWhiteSpace(n.ImageUrl))
+                        {
+                            <img class="card-img-top" src="@n.ImageUrl" alt="@n.Title" />
+                        }
+                        <div class="card-body">
+                            <h3 class="h6 card-title mb-1">@n.Title</h3>
+                            <div class="text-muted small mb-2">
+                                @n.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")
+                            </div>
+                            <a asp-controller="News" asp-action="Details" asp-route-id="@n.Id" class="stretched-link">Read</a>
                         </div>
-                        <a asp-controller="News" asp-action="Details" asp-route-id="@n.Id" class="stretched-link">Read</a>
                     </div>
                 </div>
-            </div>
-        }
-    </div>
-}
+            }
+        </div>
+    }
+</section>
 
 <hr class="my-4" />
+
+<!-- FAQ -->
 <partial name="_Faq" />

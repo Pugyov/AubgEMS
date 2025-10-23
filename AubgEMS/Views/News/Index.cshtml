@@ -6,11 +6,28 @@
     ViewData["Title"] = "News";
 }
 
-<h1 class="mb-3">News</h1>
+<!-- Header -->
+<nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">News</li>
+    </ol>
+</nav>
+
+<div class="mb-3">
+    <h1 class="page-title">News</h1>
+    <p class="page-subtitle">Latest updates from AUBG clubs.</p>
+</div>
 
 @if (Model.Items.Count == 0)
 {
-    <p>No news yet.</p>
+    @await Html.PartialAsync("_EmptyState", new AubgEMS.Models.EmptyStateViewModel {
+        Icon = "bi-newspaper",
+        Title = "No news yet",
+        Message = "Check back soon for updates."
+    })
 }
 else
 {

@@ -1,0 +1,21 @@
+@model AubgEMS.Models.EmptyStateViewModel
+
+<div class="empty-state text-center text-muted py-5">
+    <i class="bi @Model.Icon display-6 d-block mb-2"></i>
+    <h3 class="h5 mb-1">@Model.Title</h3>
+    @if (!string.IsNullOrWhiteSpace(Model.Message))
+    {
+        <p class="mb-3">@Model.Message</p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(Model.ActionText) && !string.IsNullOrWhiteSpace(Model.ActionAction))
+    {
+        <a class="btn btn-outline-primary"
+           asp-area="@Model.ActionArea"
+           asp-controller="@(Model.ActionController ?? ViewContext.RouteData.Values["controller"]?.ToString())"
+           asp-action="@Model.ActionAction"
+           asp-all-route-data="Model.RouteValues">
+            @Model.ActionText
+        </a>
+    }
+</div>

@@ -1,0 +1,98 @@
+@{
+    ViewData["Title"] = "Terms of Use";
+    var updated = new DateTime(DateTime.UtcNow.Year, DateTime.UtcNow.Month, 1).ToString("MMMM yyyy");
+}
+
+<!-- Header -->
+<nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Terms of Use</li>
+    </ol>
+</nav>
+
+<div class="mb-3">
+    <h1 class="page-title">Terms of Use</h1>
+    <p class="page-subtitle">Please read these terms carefully before using AubgEMS.</p>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <p class="text-muted small mb-4">Last updated: @updated</p>
+
+        <h2 class="h5">1. Overview</h2>
+        <p>
+            AubgEMS is a student-oriented platform for discovering and managing events and clubs at AUBG.
+            By accessing or using this website, you agree to these Terms of Use (“Terms”).
+            If you do not agree, please do not use the website.
+        </p>
+
+        <h2 class="h5 mt-4">2. Eligibility & Accounts</h2>
+        <p>
+            You are responsible for maintaining the confidentiality of your account and for all activities
+            that occur under your credentials. Some functionality may be limited to authenticated users or
+            specific roles (e.g., Organizers, Admins).
+        </p>
+
+        <h2 class="h5 mt-4">3. Events, Attendance & Content</h2>
+        <ul>
+            <li>Event details (time, location, capacity) are provided by organizers and may change.</li>
+            <li>Attendance features (Join/Leave) are best-effort and do not guarantee admission if capacity is reached.</li>
+            <li>You agree not to post unlawful, misleading, or infringing content.</li>
+        </ul>
+
+        <h2 class="h5 mt-4">4. Acceptable Use</h2>
+        <ul>
+            <li>Do not attempt to disrupt or abuse the service, including scraping or unauthorized access.</li>
+            <li>Do not impersonate others or misrepresent your affiliation.</li>
+            <li>Comply with applicable laws and AUBG policies.</li>
+        </ul>
+
+        <h2 class="h5 mt-4">5. Intellectual Property</h2>
+        <p>
+            The AubgEMS name, design, and software are protected by applicable IP laws. Event and club
+            content may be owned by the respective organizers or clubs. You retain ownership of content you submit,
+            but grant us a license to display it on the platform for its intended purpose.
+        </p>
+
+        <h2 class="h5 mt-4">6. Privacy</h2>
+        <p>
+            Your use of the website is also governed by our <a asp-controller="Home" asp-action="Privacy">Privacy Policy</a>.
+            Please review it to understand how we collect and use information.
+        </p>
+
+        <h2 class="h5 mt-4">7. Disclaimers</h2>
+        <p class="mb-2">
+            The site is provided on an “as is” and “as available” basis. We make no warranties, express or implied,
+            including but not limited to accuracy, reliability, or fitness for a particular purpose.
+        </p>
+        <p>
+            We do not control third-party venues, schedules, or external links. Use your best judgment when relying on event information.
+        </p>
+
+        <h2 class="h5 mt-4">8. Limitation of Liability</h2>
+        <p>
+            To the maximum extent permitted by law, AubgEMS and its contributors shall not be liable for any indirect,
+            incidental, special, consequential, or punitive damages, or any loss of data or profits arising from your use of the site.
+        </p>
+
+        <h2 class="h5 mt-4">9. Changes to These Terms</h2>
+        <p>
+            We may update these Terms from time to time. Continued use of the website after changes become effective
+            constitutes acceptance of the revised Terms.
+        </p>
+
+        <h2 class="h5 mt-4">10. Contact</h2>
+        <p>
+            For questions about these Terms, please reach out to the site administrators.
+        </p>
+
+        <div class="mt-4">
+            <a asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary">
+                <i class="bi bi-house"></i> Back to Home
+            </a>
+        </div>
+    </div>
+</div>

@@ -4,12 +4,34 @@
     ViewData["Title"] = "My Events";
 }
 
-<h1>My Events</h1>
-<p class="text-muted">Events you’ve created or joined, upcoming first.</p>
+<!-- Header -->
+<nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item">
+            <a asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">My Events</li>
+    </ol>
+</nav>
+
+<div class="mb-3">
+    <h1 class="page-title">My Events</h1>
+    <p class="page-subtitle">Events you’ve created or joined, upcoming first.</p>
+</div>
+
+<!-- status / toast-style alert via TempData -->
+<partial name="_StatusMessage" />
 
 @if (!Model.Items.Any())
 {
-    <div class="alert alert-info">You don’t have any events yet.</div>
+    @await Html.PartialAsync("_EmptyState", new AubgEMS.Models.EmptyStateViewModel {
+        Icon = "bi-calendar-plus",
+        Title = "No events yet",
+        Message = "Join or create an event to see it here.",
+        ActionText = "Browse events",
+        ActionController = "Events",
+        ActionAction = "Index"
+    })
 }
 else
 {
@@ -50,7 +72,11 @@ else
                             <input type="hidden" name="id" value="@item.Id" />
                             <input type="hidden" name="returnUrl"
                                    value="@Url.Action("Events", "My", new { page = Model.Page, pageSize = Model.PageSize })" />
-                            <button type="submit" class="btn btn-sm btn-outline-danger">Leave</button>
+                            <button type="submit"
+                                    class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Leave this event?');">
+                                Leave
+                            </button>
                         </form>
                     }
 

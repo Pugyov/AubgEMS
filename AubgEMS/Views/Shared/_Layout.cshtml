@@ -31,67 +31,117 @@
     var isAdmin     = User?.IsInRole(RoleNames.Admin) ?? false;
     var isOrganizer = User?.IsInRole(RoleNames.Organizer) ?? false;
 }
+
+<!-- Skip link for keyboard users -->
+<a class="visually-hidden-focusable position-absolute top-0 start-0 p-2 m-2 bg-white border rounded"
+   href="#content">Skip to main content</a>
+
 <header>
-    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 py-2 py-sm-0">
         <div class="container-fluid">
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">AubgEMS</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">AubgEMS</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+                    aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <div id="mainNav" class="navbar-collapse collapse justify-content-between">
+                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
                     <li class="nav-item">
-                        <a class="nav-link @Active(controller: "Home", action: "Index", area: "")"
-                           asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        @{
+                            var aHome = Active(controller: "Home", action: "Index", area: "");
+                        }
+                        <a class="nav-link px-2 @aHome"
+                           aria-current="@(aHome == "active" ? "page" : null)"
+                           asp-area="" asp-controller="Home" asp-action="Index">
+                            Home
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @Active(controller: "Events", area: "")"
-                           asp-area="" asp-controller="Events" asp-action="Index">Events</a>
+                        @{
+                            var aEvents = Active(controller: "Events", area: "");
+                        }
+                        <a class="nav-link px-2 @aEvents"
+                           aria-current="@(aEvents == "active" ? "page" : null)"
+                           asp-area="" asp-controller="Events" asp-action="Index">
+                            Events
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @Active(controller: "Clubs", area: "")"
-                           asp-area="" asp-controller="Clubs" asp-action="Index">Clubs</a>
+                        @{
+                            var aClubs = Active(controller: "Clubs", area: "");
+                        }
+                        <a class="nav-link px-2 @aClubs"
+                           aria-current="@(aClubs == "active" ? "page" : null)"
+                           asp-area="" asp-controller="Clubs" asp-action="Index">
+                            Clubs
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link @Active(controller: "News", area: "")"
-                           asp-area="" asp-controller="News" asp-action="Index">News</a>
+                        @{
+                            var aNews = Active(controller: "News", area: "");
+                        }
+                        <a class="nav-link px-2 @aNews"
+                           aria-current="@(aNews == "active" ? "page" : null)"
+                           asp-area="" asp-controller="News" asp-action="Index">
+                            News
+                        </a>
                     </li>
 
                     @if (isSignedIn)
                     {
                         <li class="nav-item">
-                            <a class="nav-link @Active(controller: "My", area: "")"
-                               asp-area="" asp-controller="My" asp-action="Events">My Events</a>
+                            @{
+                                var aMy = Active(controller: "My", area: "");
+                            }
+                            <a class="nav-link px-2 @aMy"
+                               aria-current="@(aMy == "active" ? "page" : null)"
+                               asp-area="" asp-controller="My" asp-action="Events">
+                                My Events
+                            </a>
                         </li>
                     }
 
                     @if (isAdmin)
                     {
                         <li class="nav-item">
-                            <a class="nav-link @Active(area: "Admin")"
-                               asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+                            @{
+                                var aAdmin = Active(area: "Admin");
+                            }
+                            <a class="nav-link px-2 @aAdmin"
+                               aria-current="@(aAdmin == "active" ? "page" : null)"
+                               asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                Admin
+                            </a>
                         </li>
                     }
 
                     @if (isOrganizer || isAdmin)
                     {
                         <li class="nav-item">
-                            <a class="nav-link @Active(area: "Organizer")"
-                               asp-area="Organizer" asp-controller="Events" asp-action="Index">Organizer</a>
+                            @{
+                                var aOrg = Active(area: "Organizer");
+                            }
+                            <a class="nav-link px-2 @aOrg"
+                               aria-current="@(aOrg == "active" ? "page" : null)"
+                               asp-area="Organizer" asp-controller="Events" asp-action="Index">
+                                Organizer
+                            </a>
                         </li>
                     }
                 </ul>
 
-                <partial name="_LoginPartial" />
+                <div class="ms-sm-3">
+                    <partial name="_LoginPartial" />
+                </div>
             </div>
         </div>
     </nav>
 </header>
 
 <div class="container flex-grow-1">
-    <main role="main" class="pb-3">
+    <main id="content" role="main" class="pb-4">
         @RenderBody()
     </main>
 </div>

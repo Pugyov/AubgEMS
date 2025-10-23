@@ -3,64 +3,79 @@
     ViewData["Title"] = "Create Event";
 }
 
-<h1>Create Event</h1>
-<hr />
+<nav aria-label="breadcrumb" class="mb-2">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+    <li class="breadcrumb-item"><a asp-area="Organizer" asp-controller="Events" asp-action="Index">Organizer · Events</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Create</li>
+  </ol>
+</nav>
 
-<form asp-area="Organizer" asp-controller="Events" asp-action="Create" method="post" class="row g-3">
-    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+<h1 class="page-title mb-3">Create Event</h1>
+
+<form asp-area="Organizer" asp-controller="Events" asp-action="Create" method="post" class="row g-3" novalidate>
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="validation-summary-errors"></div>
 
     <div class="col-md-6">
-        <label asp-for="Title" class="form-label"></label>
+        <label asp-for="Title" class="form-label required"></label>
         <input asp-for="Title" class="form-control" />
-        <span asp-validation-for="Title" class="text-danger"></span>
+        <span asp-validation-for="Title" class="field-validation-error"></span>
+        <div class="form-text">A short, clear event title.</div>
     </div>
 
     <div class="col-md-6">
-        <label class="form-label">Start Time (UTC)</label>
+        <label asp-for="StartTime" class="form-label required">Start Time (UTC)</label>
         <input asp-for="StartTime" type="datetime-local" class="form-control" />
-        <span asp-validation-for="StartTime" class="text-danger"></span>
+        <span asp-validation-for="StartTime" class="field-validation-error"></span>
+        <div class="form-text">Use UTC time. We’ll render it in local time for users.</div>
     </div>
 
     <div class="col-12">
         <label asp-for="Description" class="form-label"></label>
-        <textarea asp-for="Description" class="form-control" rows="4"></textarea>
-        <span asp-validation-for="Description" class="text-danger"></span>
+        <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+        <span asp-validation-for="Description" class="field-validation-error"></span>
+        <div class="form-text">Optional: a few sentences about the event.</div>
     </div>
 
     <div class="col-md-3">
-        <label asp-for="Capacity" class="form-label"></label>
+        <label asp-for="Capacity" class="form-label required"></label>
         <input asp-for="Capacity" class="form-control" />
-        <span asp-validation-for="Capacity" class="text-danger"></span>
+        <span asp-validation-for="Capacity" class="field-validation-error"></span>
+        <div class="form-text">Max attendees (used for fill-rate analytics).</div>
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">Event Type</label>
+        <label asp-for="EventTypeId" class="form-label required">Event Type</label>
         <select asp-for="EventTypeId" class="form-select" asp-items="ViewBag.EventTypes"></select>
-        <span asp-validation-for="EventTypeId" class="text-danger"></span>
+        <span asp-validation-for="EventTypeId" class="field-validation-error"></span>
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">Club</label>
+        <label asp-for="ClubId" class="form-label required">Club</label>
         <select asp-for="ClubId" class="form-select" asp-items="ViewBag.Clubs"></select>
-        <span asp-validation-for="ClubId" class="text-danger"></span>
+        <span asp-validation-for="ClubId" class="field-validation-error"></span>
     </div>
 
     <div class="col-md-3">
-        <label class="form-label">Location</label>
+        <label asp-for="LocationId" class="form-label">Location</label>
         <select asp-for="LocationId" class="form-select" asp-items="ViewBag.Locations">
             <option value="">(none)</option>
         </select>
+        <span asp-validation-for="LocationId" class="field-validation-error"></span>
+        <div class="form-text">Leave blank for TBA or online format.</div>
     </div>
 
     <div class="col-md-6">
-        <label asp-for="ImageUrl" class="form-label"></label>
+        <label asp-for="ImageUrl" class="form-label">Image URL</label>
         <input asp-for="ImageUrl" class="form-control" />
-        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+        <span asp-validation-for="ImageUrl" class="field-validation-error"></span>
+        <div class="form-text">Optional header image shown on the card/details.</div>
     </div>
 
-    <div class="col-12">
-        <button class="btn btn-primary">Create</button>
-        <a asp-area="Organizer" asp-controller="Events" asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+    <div class="col-12 d-flex gap-2">
+        <button class="btn btn-primary" type="submit">Create</button>
+        <a asp-area="Organizer" asp-controller="Events" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
     </div>
 </form>
 

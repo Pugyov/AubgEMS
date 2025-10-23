@@ -1,39 +1,125 @@
-html {
-  font-size: 14px;
-}
+/* ===== Base sizing & focus ===== */
+html { font-size: 14px; }
+@media (min-width: 768px){ html { font-size: 16px; } }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
-
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+.btn:focus,
+.btn:active:focus,
+.btn-link.nav-link:focus,
+.form-control:focus,
+.form-check-input:focus {
   box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
-}
+body { line-height: 1.6; }
 
-body {
-  margin-bottom: 0;
-}
+/* Keep if you want, but flex layout in _Layout already handles footer stickiness */
+html { position: relative; min-height: 100%; }
 
-.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
-}
-
-.navbar .nav-link.active {
-  font-weight: 600;
-  border-bottom: 2px solid currentColor;
-}
-
+/* ===== Footer minor tweaks ===== */
 footer .link-body-emphasis:hover { text-decoration: underline; }
 footer .bi { vertical-align: -0.125em; }
+
+/* ===== AubgEMS Light Theme (Bootstrap 5 overrides) ===== */
+:root{
+  /* Brand */
+  --bs-primary: #1e3a8a;          /* indigo 800 */
+  --bs-primary-rgb: 30,58,138;
+  --bs-link-color: var(--bs-primary);
+  --bs-link-hover-color: #2563eb; /* blue 600 */
+
+  --bs-secondary: #64748b;        /* slate 500 */
+  --bs-secondary-rgb: 100,116,139;
+
+  /* Semantic */
+  --bs-success: #16a34a; /* green 600 */
+  --bs-info:    #0ea5e9; /* sky 500 */
+  --bs-warning: #f59e0b; /* amber 500 */
+  --bs-danger:  #ef4444; /* red 500 */
+
+  /* Typography & radii */
+  --bs-body-font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+  --bs-body-color: #0f172a;       /* slate 900 */
+  --bs-body-bg: #ffffff;
+  --bs-border-radius: .75rem;     /* softer cards/buttons */
+  --bs-border-radius-lg: 1rem;
+}
+
+/* ===== Page headers (Step 2) ===== */
+.page-title { margin-bottom: .25rem; }
+.page-subtitle { color: var(--bs-secondary); margin-bottom: 1.25rem; }
+
+/* Optional section rhythm helper */
+.section { margin-top: 1.5rem; margin-bottom: 1.5rem; }
+
+/* ===== Navbar active underline (area-aware helper sets .active) ===== */
+.navbar .nav-link.active{
+  font-weight: 600;
+  border-bottom: 2px solid var(--bs-primary);
+}
+
+/* ===== Hero (Home) ===== */
+.hero {
+  background: linear-gradient(135deg, var(--bs-primary) 0%, #3b82f6 100%);
+  color: #fff;
+  border-radius: var(--bs-border-radius);
+}
+
+/* ===== Cards ===== */
+.card {
+  border: 1px solid rgba(2,8,23,.06);
+  border-radius: var(--bs-border-radius);
+  box-shadow: 0 1px 2px rgba(2,8,23,.04);
+}
+.card-img-top { object-fit: cover; max-height: 180px; }
+
+.event-card { transition: transform .12s ease, box-shadow .12s ease; }
+.event-card:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(2,8,23,.08); }
+
+/* ===== Empty state ===== */
+.empty-state i { opacity:.8; }
+
+/* ===== Validation polish ===== */
+.validation-summary-errors {
+  padding: .75rem 1rem;
+  border: 1px solid var(--bs-danger-border-subtle, #f1aeb5);
+  background: var(--bs-danger-bg-subtle, #f8d7da);
+  color: var(--bs-danger-text-emphasis, #58151c);
+  border-radius: .5rem;
+  margin-bottom: 1rem;
+}
+
+.field-validation-error {
+  color: var(--bs-danger);
+  font-size: .875rem;
+}
+
+.input-validation-error {
+  border-color: var(--bs-danger) !important;
+  box-shadow: 0 0 0 .1rem rgba(220, 53, 69, .2);
+}
+
+/* Optional: add * for labels you mark as required */
+label.required::after {
+  content: " *";
+  color: var(--bs-danger);
+  margin-left: .125rem;
+}
+
+/* Navbar tweaks */
+.navbar .nav-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .5rem .6rem;
+}
+.navbar .nav-link i { font-size: 1rem; line-height: 1; }
+
+@media (max-width: 576px) {
+  .navbar .nav-link { padding: .5rem .4rem; }
+  .navbar-brand { font-weight: 600; }
+}
+
+/* Keep the underline consistent (already set elsewhere) */
+.navbar .nav-link.active {
+  border-bottom-width: 2px;
+}

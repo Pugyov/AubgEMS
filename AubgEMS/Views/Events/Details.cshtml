@@ -5,6 +5,9 @@
     ViewData["Title"] = Model.Title;
 }
 
+<!-- status / toast-style alert via TempData -->
+<partial name="_StatusMessage" />
+
 <div class="row">
     <div class="col-lg-8">
         <h1 class="mb-3">@Model.Title</h1>
@@ -31,7 +34,11 @@
                         <input type="hidden" name="id" value="@Model.Id" />
                         <input type="hidden" name="returnUrl"
                                value="@Url.Action("Details","Events", new { id = Model.Id })" />
-                        <button type="submit" class="btn btn-outline-danger btn-sm">Leave</button>
+                        <button type="submit"
+                                class="btn btn-outline-danger btn-sm"
+                                onclick="return confirm('Leave this event?');">
+                            Leave
+                        </button>
                     </form>
                 }
                 else

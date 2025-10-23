@@ -7,7 +7,20 @@
     var query = (AubgEMS.Core.Models.Events.EventQuery)ViewBag.Query;
 }
 
-<h1 class="mb-3">Events</h1>
+<!-- Header -->
+<nav aria-label="breadcrumb" class="mb-2">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item">
+      <a asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Events</li>
+  </ol>
+</nav>
+
+<div class="mb-3">
+  <h1 class="page-title">Events</h1>
+  <p class="page-subtitle">Browse and filter upcoming events.</p>
+</div>
 
 <form method="get" class="row g-2 mb-4">
     <div class="col-12 col-md-3">
@@ -47,7 +60,14 @@
 
 @if (Model.TotalCount == 0)
 {
-    <div class="alert alert-info">No events match your filters.</div>
+    @await Html.PartialAsync("_EmptyState", new AubgEMS.Models.EmptyStateViewModel {
+        Icon = "bi-calendar2-x",
+        Title = "No events match your filters",
+        Message = "Try adjusting the filters or clearing your search.",
+        ActionText = "Reset filters",
+        ActionController = "Events",
+        ActionAction = "Index"
+    })
 }
 else
 {
@@ -55,26 +75,7 @@ else
         @foreach (var e in Model.Items)
         {
             <div class="col">
-                <div class="card h-100">
-                    @if (!string.IsNullOrWhiteSpace(e.ImageUrl))
-                    {
-                        <img class="card-img-top" src="@e.ImageUrl" alt="@e.Title" />
-                    }
-                    <div class="card-body">
-                        <h5 class="card-title">@e.Title</h5>
-                        <p class="card-text mb-1"><strong>@e.EventTypeName</strong> · @e.ClubName</p>
-                        <p class="card-text text-muted mb-1">
-                            @e.StartTime.ToString("g")
-                            @if (!string.IsNullOrWhiteSpace(e.LocationName))
-                            {
-                                <span> · @e.LocationName</span>
-                            }
-                        </p>
-                    </div>
-                    <div class="card-footer bg-white">
-                        <a class="btn btn-sm btn-outline-primary" asp-action="Details" asp-route-id="@e.Id">Details</a>
-                    </div>
-                </div>
+                @await Html.PartialAsync("_EventCard", e)
             </div>
         }
     </div>

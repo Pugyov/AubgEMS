@@ -1,0 +1,42 @@
+@model AubgEMS.Core.Models.News.NewsDetailsDto
+@{
+    ViewData["Title"] = "Delete News";
+}
+
+<nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item"><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
+        <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="News" asp-action="Index">Admin · News</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Delete</li>
+    </ol>
+</nav>
+
+<h1 class="page-title mb-3">Delete News</h1>
+
+<div class="alert alert-warning">
+    <strong>Are you sure?</strong> This will permanently remove the news post.
+</div>
+
+<div class="card shadow-sm mb-3">
+    <div class="card-body">
+        <h5 class="card-title mb-1">@Model.Title</h5>
+        <div class="text-muted small mb-3">@Model.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy, HH:mm")</div>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        {
+            <img src="@Model.ImageUrl" alt="@Model.Title" class="img-fluid rounded mb-3" style="max-height:220px;object-fit:cover;" />
+        }
+
+        @if (!string.IsNullOrWhiteSpace(Model.Body))
+        {
+            <p class="mb-0 text-muted" style="white-space:pre-wrap;">@Model.Body</p>
+        }
+    </div>
+</div>
+
+<form asp-area="Admin" asp-controller="News" asp-action="Delete" method="post" class="d-flex gap-2">
+    @Html.AntiForgeryToken()
+    <input type="hidden" name="id" value="@Model.Id" />
+    <button type="submit" class="btn btn-danger">Delete</button>
+    <a asp-area="Admin" asp-controller="News" asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

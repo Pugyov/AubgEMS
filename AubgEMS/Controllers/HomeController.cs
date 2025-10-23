@@ -37,4 +37,8 @@ public class HomeController : Controller
     [AllowAnonymous]
     public IActionResult Error()
         => View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+    
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Terms() => View();
 }

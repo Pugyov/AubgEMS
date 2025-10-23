@@ -9,81 +9,75 @@
     var totalPages  = (int)Math.Ceiling((double)Model.Events.TotalCount / Model.Events.PageSize);
     var page        = Model.Events.Page;
     var pageSize    = Model.Events.PageSize;
-    var prevDisabled = page <= 1 ? "disabled" : "";
-    var nextDisabled = page >= totalPages ? "disabled" : "";
 }
 
-<h1 class="mb-1">@Model.Club.Name</h1>
-<p class="text-muted mb-4">
-    <strong>Department:</strong> @Model.Club.DepartmentName
-</p>
+<!-- Header -->
+<nav aria-label="breadcrumb" class="mb-2">
+  <ol class="breadcrumb small">
+    <li class="breadcrumb-item">
+      <a asp-controller="Home" asp-action="Index">Home</a>
+    </li>
+    <li class="breadcrumb-item">
+      <a asp-controller="Clubs" asp-action="Index">Clubs</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">@Model.Club.Name</li>
+  </ol>
+</nav>
+
+<div class="mb-3">
+  <h1 class="page-title">@Model.Club.Name</h1>
+  <p class="page-subtitle">Department: @Model.Club.DepartmentName</p>
+</div>
 
 @if (!string.IsNullOrWhiteSpace(Model.Club.Description))
 {
-    <p class="mb-4">@Model.Club.Description</p>
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <p class="mb-0">@Model.Club.Description</p>
+        </div>
+    </div>
 }
 
-<h4 class="mb-3">Events</h4>
+<h2 class="h5 mb-3">Events</h2>
 
 @if (!Model.Events.Items.Any())
 {
-    <div class="alert alert-info">This club has no events yet.</div>
+    @await Html.PartialAsync("_EmptyState", new AubgEMS.Models.EmptyStateViewModel {
+        Icon = "bi-calendar2-x",
+        Title = "No upcoming events",
+        Message = "This club hasn’t scheduled any events yet."
+    })
 }
 else
 {
-    <table class="table table-striped align-middle">
-        <thead>
-            <tr>
-                <th>Title</th>
-                <th>Start</th>
-                <th>Type</th>
-                <th>Location</th>
-                <th style="width: 120px;"></th>
-            </tr>
-        </thead>
-        <tbody>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
         @foreach (var e in Model.Events.Items)
         {
-            <tr>
-                <td>@e.Title</td>
-                <td>@e.StartTime.ToString("yyyy-MM-dd HH:mm")</td>
-                <td>@e.EventTypeName</td>
-                <td>@(e.LocationName ?? "-")</td>
-                <td class="text-end">
-                    <a class="btn btn-sm btn-outline-secondary"
-                       asp-controller="Events"
-                       asp-action="Details"
-                       asp-route-id="@e.Id">View</a>
-                </td>
-            </tr>
+            <div class="col">
+                @await Html.PartialAsync("_EventCard", e, new ViewDataDictionary(ViewData) {
+                    ["DetailsText"] = "View"
+                })
+            </div>
         }
-        </tbody>
-    </table>
+    </div>
 
-    @if (totalPages > 1)
-    {
-        <nav aria-label="pager">
-            <ul class="pagination">
-                <li class="page-item @prevDisabled">
-                    <a class="page-link"
-                       asp-action="Details"
-                       asp-route-id="@Model.Club.Id"
-                       asp-route-page="@(page - 1)"
-                       asp-route-pageSize="@pageSize">Prev</a>
-                </li>
+    <div class="d-flex justify-content-between align-items-center mt-4">
+        <div class="text-muted">
+            Page @Model.Events.Page • @Model.Events.TotalCount total
+        </div>
 
-                <li class="page-item disabled">
-                    <span class="page-link">Page @(page) of @(totalPages)</span>
-                </li>
-
-                <li class="page-item @nextDisabled">
-                    <a class="page-link"
-                       asp-action="Details"
-                       asp-route-id="@Model.Club.Id"
-                       asp-route-page="@(page + 1)"
-                       asp-route-pageSize="@pageSize">Next</a>
-                </li>
-            </ul>
-        </nav>
-    }
+        @{
+            var routes = new Dictionary<string,string?> {
+                ["id"] = Model.Club.Id.ToString()
+            };
+        }
+        @await Html.PartialAsync("_Pager", new AubgEMS.Models.PagerViewModel {
+            Page = Model.Events.Page,
+            PageSize = Model.Events.PageSize,
+            TotalCount = Model.Events.TotalCount,
+            Controller = "Clubs",
+            Action = "Details",
+            RouteValues = routes
+        })
+    </div>
 }

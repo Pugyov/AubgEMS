@@ -1,15 +1,41 @@
 @model AubgEMS.Core.Models.News.NewsEditDto
 @{
     ViewData["Title"] = "Edit News";
+    var id = (int)(ViewBag.NewsId ?? 0);
 }
-<h1>Edit News</h1>
 
-<form method="post">
-    <partial name="_Form" model="Model" />
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a asp-area="Admin" asp-controller="News" asp-action="Index" class="btn btn-secondary">Back</a>
+<h1 class="mb-2">Edit News</h1>
+<p class="text-muted mb-3">Update the content shown on the Home and News pages.</p>
+<hr />
+
+<form asp-area="Admin" asp-controller="News" asp-action="Edit" asp-route-id="@id" method="post" class="row g-3">
+    <div asp-validation-summary="ModelOnly" class="validation-summary text-danger" role="alert"></div>
+
+    <div class="col-12">
+        <label asp-for="Title" class="form-label required"></label>
+        <input asp-for="Title" class="form-control" />
+        <div class="form-text">Keep titles concise and informative.</div>
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Body" class="form-label required"></label>
+        <textarea asp-for="Body" class="form-control" rows="6"></textarea>
+        <div class="form-text">You can paste basic formatted text; keep it clear and scannable.</div>
+        <span asp-validation-for="Body" class="text-danger"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="ImageUrl" class="form-label"></label>
+        <input asp-for="ImageUrl" class="form-control" placeholder="https://example.com/image.jpg" />
+        <div class="form-text">Optional. A wide image looks best (≥ 1200×630).</div>
+        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <button class="btn btn-primary">Save</button>
+        <a asp-area="Admin" asp-controller="News" asp-action="Index" class="btn btn-outline-secondary ms-2">Cancel</a>
+    </div>
 </form>
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

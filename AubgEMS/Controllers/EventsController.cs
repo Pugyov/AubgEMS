@@ -78,7 +78,12 @@ namespace AubgEMS.Controllers
         public async Task<IActionResult> Join(int id, string? returnUrl = null, CancellationToken ct = default)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            await _attendance.JoinAsync(id, userId, ct);
+            var ok = await _attendance.JoinAsync(id, userId, ct);
+
+            TempData["StatusMessage"] = ok
+                ? "You joined the event."
+                : "You were already joined or the event is unavailable.";
+
             return SafeBack(returnUrl, id);
         }
 
@@ -89,7 +94,12 @@ namespace AubgEMS.Controllers
         public async Task<IActionResult> Leave(int id, string? returnUrl = null, CancellationToken ct = default)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier)!;
-            await _attendance.LeaveAsync(id, userId, ct);
+            var ok = await _attendance.LeaveAsync(id, userId, ct);
+
+            TempData["StatusMessage"] = ok
+                ? "You left the event."
+                : "You were not joined to this event.";
+
             return SafeBack(returnUrl, id);
         }
 

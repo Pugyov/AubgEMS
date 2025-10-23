@@ -7,16 +7,52 @@
 
     var from = fromDt.ToString("yyyy-MM-dd");
     var to   = toDt.ToString("yyyy-MM-dd");
+
+    // Quick range presets (computed here so the controller can stay unchanged)
+    var today    = DateTime.UtcNow.Date;
+    var todayStr = today.ToString("yyyy-MM-dd");
+    var p7From   = today.AddDays(-6).ToString("yyyy-MM-dd");   // last 7 days incl. today
+    var p30From  = today.AddDays(-29).ToString("yyyy-MM-dd");  // last 30 days incl. today
+    var p90From  = today.AddDays(-89).ToString("yyyy-MM-dd");  // last 90 days incl. today
 }
 
-<h1 class="mb-4">Admin Dashboard</h1>
+<!-- Header -->
+<nav aria-label="breadcrumb" class="mb-2">
+    <ol class="breadcrumb small">
+        <li class="breadcrumb-item">
+            <a asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+        </li>
+        <li class="breadcrumb-item">
+            <a asp-area="Admin" asp-controller="Dashboard" asp-action="Index">Admin</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Dashboard</li>
+    </ol>
+</nav>
+
+<div class="mb-3">
+    <h1 class="page-title">Admin Dashboard</h1>
+    <p class="page-subtitle">KPIs and quick actions for the selected date range.</p>
+</div>
 
 <div class="row g-3">
     <!-- Main column -->
     <div class="col-lg-8">
         <!-- Filters -->
         <div class="card shadow-sm mb-3">
-            <div class="card-header">Filters</div>
+            <div class="card-header d-flex align-items-center justify-content-between">
+                <span>Filters</span>
+                <div class="btn-group btn-group-sm" role="group" aria-label="Quick ranges">
+                    <a class="btn btn-outline-secondary"
+                       asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                       asp-route-from="@p7From" asp-route-to="@todayStr">Last 7d</a>
+                    <a class="btn btn-outline-secondary"
+                       asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                       asp-route-from="@p30From" asp-route-to="@todayStr">Last 30d</a>
+                    <a class="btn btn-outline-secondary"
+                       asp-area="Admin" asp-controller="Dashboard" asp-action="Index"
+                       asp-route-from="@p90From" asp-route-to="@todayStr">Last 90d</a>
+                </div>
+            </div>
             <div class="card-body">
                 <form method="get" class="row g-2 align-items-end">
                     <div class="col-12 col-md-4">
@@ -41,7 +77,7 @@
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <div class="text-muted small">Total Events (in range)</div>
+                        <div class="text-muted small"><i class="bi bi-calendar3 me-1"></i> Total Events (in range)</div>
                         <div class="display-6">@Model.TotalEvents</div>
                     </div>
                 </div>
@@ -50,7 +86,7 @@
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <div class="text-muted small">Total Sign-ups (Joins)</div>
+                        <div class="text-muted small"><i class="bi bi-people me-1"></i> Total Sign-ups (Joins)</div>
                         <div class="display-6">@Model.TotalJoins</div>
                     </div>
                 </div>
@@ -59,33 +95,32 @@
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <div class="text-muted small">Avg. Fill Rate</div>
-                        <div class="display-6">@String.Format("{0:P1}", Model.AvgFillRate)</div>  @* one decimal *@
+                        <div class="text-muted small"><i class="bi bi-clipboard2-check me-1"></i> Avg. Fill Rate</div>
+                        <div class="display-6">@String.Format("{0:P1}", Model.AvgFillRate)</div>
                         <div class="text-muted small mt-1">Avg of min(joins, capacity)/capacity</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <div class="text-muted small">Upcoming Week Load</div>
+                        <div class="text-muted small"><i class="bi bi-alarm me-1"></i> Upcoming Week Load</div>
                         <div class="display-6">@Model.UpcomingWeekLoad</div>
                         <div class="text-muted small mt-1">Event(s) in the next 7 days</div>
                     </div>
                 </div>
             </div>
-            
+
             <div class="col-12 col-sm-6 col-xl-3">
                 <div class="card shadow-sm h-100">
                     <div class="card-body">
-                        <div class="text-muted small">Unique Attendees</div>
+                        <div class="text-muted small"><i class="bi bi-person-check me-1"></i> Unique Attendees</div>
                         <div class="display-6">@Model.UniqueAttendees</div>
                         <div class="text-muted small mt-1">Distinct users in range</div>
                     </div>
                 </div>
             </div>
-            
         </div>
     </div>
 
