@@ -26,5 +26,9 @@ public class ApplicationDbContext : IdentityDbContext
         // MySQL charset/collation (Pomelo)
         builder.UseCollation("utf8mb4_unicode_ci");
         builder.HasCharSet("utf8mb4");
+        
+        builder.Entity<EventAttendance>()
+            .HasIndex(a => new { a.EventId, a.UserId })
+            .IsUnique();
     }
 }

@@ -22,3 +22,16 @@
         });
     });
 })();
+
+(function () {
+    const nav = document.querySelector('.navbar-glass');
+    if (!nav) return;
+
+    const onScroll = () => {
+        const y = window.scrollY || document.documentElement.scrollTop;
+        nav.classList.toggle('is-scrolled', y > 8);
+    };
+
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+})();

@@ -18,6 +18,6 @@ public class EventDetailsDto
 
     public int? LocationId { get; set; }
     public string? LocationName { get; set; }
-
     public string? ImageUrl { get; set; }
+    public int AttendeeCount { get; init; }
 }

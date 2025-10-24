@@ -14,20 +14,41 @@ namespace AubgEMS.Core.Services
 
         public async Task<bool> JoinAsync(int eventId, string userId, CancellationToken ct = default)
         {
-            // event must exist
-            var evExists = await _db.Events.AnyAsync(e => e.Id == eventId, ct);
-            if (!evExists) return false;
+            // Load event capacity (and verify it exists)
+            var ev = await _db.Events
+                .Where(e => e.Id == eventId)
+                .Select(e => new { e.Id, e.Capacity })
+                .FirstOrDefaultAsync(ct);
 
-            // idempotent join
-            var exists = await _db.EventAttendances
+            if (ev is null) return false;
+
+            // Idempotent: already joined by this user?
+            var already = await _db.EventAttendances
                 .AnyAsync(a => a.EventId == eventId && a.UserId == userId, ct);
-            if (exists) return false;
+            if (already) return false;
 
+            // Capacity check (treat <= 0 as "unlimited")
+            var current = await _db.EventAttendances
+                .CountAsync(a => a.EventId == eventId, ct);
+
+            if (ev.Capacity > 0 && current >= ev.Capacity)
+                return false;
+
+            // Create attendance
             _db.EventAttendances.Add(new EventAttendance { EventId = eventId, UserId = userId });
-            await _db.SaveChangesAsync(ct);
-            return true;
-        }
 
+            try
+            {
+                await _db.SaveChangesAsync(ct);
+                return true;
+            }
+            catch (DbUpdateException)
+            {
+                // If a unique index exists on (EventId, UserId), this catches rare races / double clicks
+                return false;
+            }
+        }
+        
         public async Task<bool> LeaveAsync(int eventId, string userId, CancellationToken ct = default)
         {
             var att = await _db.EventAttendances

@@ -1,27 +1,27 @@
 @model AubgEMS.Core.Models.Events.EventListItemDto
-@{
-    // Optional: allow parent views to override the details button text via ViewData["DetailsText"]
-    var detailsText = ViewData["DetailsText"] as string ?? "Details";
-}
-<div class="card h-100 shadow-sm event-card">
-    @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
-    {
-        <div class="ratio ratio-16x9">
-            <img src="@Model.ImageUrl" alt="@Model.Title" class="w-100 h-100" style="object-fit:cover;" />
-        </div>
-    }
-    else
-    {
-        <div class="ratio ratio-16x9 bg-light d-flex align-items-center justify-content-center text-muted">
-            <i class="bi bi-image me-2"></i> No image
-        </div>
-    }
+
+<div class="card h-100 shadow-sm event-card position-relative">
+    <!-- Top media (rounded only on top via CSS) -->
+    <div class="ratio rounded-top overflow-hidden" style="--bs-aspect-ratio: 56%;">
+        @if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+        {
+            <img class="img-cover" src="@Model.ImageUrl" alt="@Model.Title" />
+        }
+        else
+        {
+            <div class="img-placeholder d-flex align-items-center justify-content-center text-muted">
+                <i class="bi bi-image me-2"></i> No image
+            </div>
+        }
+    </div>
 
     <div class="card-body">
         <h5 class="card-title mb-1">@Model.Title</h5>
+
         <div class="small text-muted mb-1">
             <strong>@Model.EventTypeName</strong> · @Model.ClubName
         </div>
+
         <div class="small text-muted">
             @Model.StartTime.ToLocalTime().ToString("ddd, dd MMM yyyy HH:mm")
             @if (!string.IsNullOrWhiteSpace(Model.LocationName))
@@ -29,11 +29,13 @@
                 <span> · @Model.LocationName</span>
             }
         </div>
-    </div>
 
-    <div class="card-footer bg-white">
-        <a class="btn btn-sm btn-outline-primary" asp-controller="Events" asp-action="Details" asp-route-id="@Model.Id">
-            @detailsText
+        <!-- Make the whole card clickable -->
+        <a class="stretched-link"
+           asp-controller="Events"
+           asp-action="Details"
+           asp-route-id="@Model.Id">
+            <span class="visually-hidden">View details for @Model.Title</span>
         </a>
     </div>
 </div>

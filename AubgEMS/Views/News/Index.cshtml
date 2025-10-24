@@ -5,12 +5,11 @@
 @{
     ViewData["Title"] = "News";
 
-    var items = (Model.Items ?? Enumerable.Empty<NewsListItemDto>()).ToList();
-    var lead  = items.ElementAtOrDefault(0);
-    var rest  = items.Skip(1).ToList(); // everything after the lead goes to the grid
+    var items = (Model?.Items ?? Enumerable.Empty<NewsListItemDto>()).ToList();
 
-    string FDate(DateTime dt)     => dt.ToLocalTime().ToString("dd MMM yyyy");
-    string FDateTime(DateTime dt) => dt.ToLocalTime().ToString("dd MMM yyyy · HH:mm");
+    // Safe lead/rest split without null-forgiving
+    NewsListItemDto? lead = items.Count > 0 ? items[0] : null;
+    var rest = items.Count > 1 ? items.Skip(1).ToList() : new List<NewsListItemDto>();
 }
 
 <!-- Breadcrumb -->
@@ -21,7 +20,7 @@
   </ol>
 </nav>
 
-<!-- Section title (brand blue) -->
+<!-- Section title -->
 <h1 class="text-center mb-3 text-primary fw-bold text-uppercase" style="letter-spacing:.02em;">AUBG News</h1>
 
 @if (!items.Any())
@@ -37,45 +36,51 @@
 }
 else
 {
-    <!-- Lead module: left text, right hero image (NO right rail tile) -->
-    <div class="news-lead rounded-4 border bg-white shadow-sm p-3 p-lg-4 mb-4">
-        <div class="row g-4 align-items-stretch">
-            <!-- Left: lead text -->
-            <div class="col-lg-5">
-                <div class="h-100 d-flex flex-column">
-                    <a class="text-decoration-none" asp-controller="News" asp-action="Details" asp-route-id="@lead!.Id">
-                        <h2 class="lead-headline mb-2 text-primary">@lead.Title</h2>
-                    </a>
-                    <div class="text-muted small mb-2">@FDateTime(lead.CreatedAtUtc)</div>
-                    <p class="mb-3 text-body-secondary">Latest headline from AUBG clubs and organizers.</p>
-                    <div class="mt-auto">
-                        <a class="btn btn-primary btn-lg px-3"
-                           asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
-                            Read full story
+    <!-- Lead module: left text, right hero image -->
+    @if (lead != null)
+    {
+        <div class="news-lead rounded-4 border bg-white shadow-sm p-3 p-lg-4 mb-4">
+            <div class="row g-4 align-items-stretch">
+                <!-- Left: lead text -->
+                <div class="col-lg-5">
+                    <div class="h-100 d-flex flex-column">
+                        <a class="text-decoration-none" asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
+                            <h2 class="lead-headline mb-2 text-primary">@lead.Title</h2>
                         </a>
+                        <div class="text-muted small mb-2">
+                            @lead.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy · HH:mm")
+                        </div>
+                        <p class="mb-3 text-body-secondary">Latest headline from AUBG clubs and organizers.</p>
+                        <div class="mt-auto">
+                            <a class="btn btn-primary btn-lg px-3"
+                               asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
+                                Read full story
+                            </a>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Right: hero image -->
-            <div class="col-lg-7">
-                <a class="d-block h-100 text-decoration-none"
-                   asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
-                    <div class="ratio rounded-3 overflow-hidden" style="--bs-aspect-ratio: 56%;">
-                        @if (!string.IsNullOrWhiteSpace(lead.ImageUrl))
-                        {
-                            <img class="img-cover" src="@lead.ImageUrl" alt="@lead.Title" />
-                        }
-                        else
-                        {
-                            <div class="img-placeholder"></div>
-                        }
-                    </div>
-                </a>
+                <!-- Right: hero image -->
+                <div class="col-lg-7">
+                    <a class="d-block h-100 text-decoration-none"
+                       asp-controller="News" asp-action="Details" asp-route-id="@lead.Id">
+                        <div class="ratio rounded-top overflow-hidden" style="--bs-aspect-ratio: 56%;">
+                            @if (!string.IsNullOrWhiteSpace(lead.ImageUrl))
+                            {
+                                <img class="img-cover" src="@lead.ImageUrl" alt="@lead.Title" />
+                            }
+                            else
+                            {
+                                <div class="img-placeholder"></div>
+                            }
+                        </div>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
-    <!-- Grid of more stories (includes what used to be the right rail) -->
+    }
+
+    <!-- Grid of more stories -->
     @if (rest.Any())
     {
         <div class="row g-4">
@@ -95,7 +100,9 @@ else
                             }
                         </div>
                         <div class="card-body">
-                            <div class="news-meta mb-1">@FDate(n.CreatedAtUtc)</div>
+                            <div class="news-meta mb-1">
+                                @n.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")
+                            </div>
                             <h3 class="h6 mb-0 line-clamp-2">@n.Title</h3>
                         </div>
                     </a>

@@ -36,69 +36,71 @@
 <a class="visually-hidden-focusable position-absolute top-0 start-0 p-2 m-2 bg-white border rounded"
    href="#content">Skip to main content</a>
 
-<header>
-    <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom box-shadow mb-3 py-2 py-sm-0">
+<header class="sticky-top">
+    <nav class="navbar navbar-expand-lg navbar-light navbar-glass fixed-top nav-underline">
         <div class="container-fluid">
-            <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">AubgEMS</a>
 
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNav"
+            <!-- Brand -->
+            <a class="navbar-brand fw-semibold" asp-area="" asp-controller="Home" asp-action="Index">
+                AubgEMS
+            </a>
+
+            <!-- Mobile toggler opens the COLLAPSE below -->
+            <button class="navbar-toggler" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#mainNav"
                     aria-controls="mainNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
 
-            <div id="mainNav" class="navbar-collapse collapse justify-content-between">
-                <ul class="navbar-nav me-auto mb-2 mb-sm-0">
+            <!-- Collapse: visible inline ≥ lg, stacked on mobile -->
+            <div id="mainNav" class="collapse navbar-collapse">
+                <!-- Left: main nav -->
+                <ul class="navbar-nav nav-underline me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        @{
-                            var aHome = Active(controller: "Home", action: "Index", area: "");
-                        }
-                        <a class="nav-link px-2 @aHome"
+                        @{ var aHome = Active(controller: "Home", action: "Index", area: ""); }
+                        <a class="nav-link @aHome"
                            aria-current="@(aHome == "active" ? "page" : null)"
                            asp-area="" asp-controller="Home" asp-action="Index">
-                            Home
+                            <i class="bi bi-house"></i> Home
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        @{
-                            var aEvents = Active(controller: "Events", area: "");
-                        }
-                        <a class="nav-link px-2 @aEvents"
+                        @{ var aEvents = Active(controller: "Events", area: ""); }
+                        <a class="nav-link @aEvents"
                            aria-current="@(aEvents == "active" ? "page" : null)"
                            asp-area="" asp-controller="Events" asp-action="Index">
-                            Events
+                            <i class="bi bi-calendar3"></i> Events
                         </a>
                     </li>
+
+                    <!-- News before Clubs -->
                     <li class="nav-item">
-                        @{
-                            var aNews = Active(controller: "News", area: "");
-                        }
-                        <a class="nav-link px-2 @aNews"
+                        @{ var aNews = Active(controller: "News", area: ""); }
+                        <a class="nav-link @aNews"
                            aria-current="@(aNews == "active" ? "page" : null)"
                            asp-area="" asp-controller="News" asp-action="Index">
-                            News
+                            <i class="bi bi-newspaper"></i> News
                         </a>
                     </li>
+
                     <li class="nav-item">
-                        @{
-                            var aClubs = Active(controller: "Clubs", area: "");
-                        }
-                        <a class="nav-link px-2 @aClubs"
+                        @{ var aClubs = Active(controller: "Clubs", area: ""); }
+                        <a class="nav-link @aClubs"
                            aria-current="@(aClubs == "active" ? "page" : null)"
                            asp-area="" asp-controller="Clubs" asp-action="Index">
-                            Clubs
+                            <i class="bi bi-people"></i> Clubs
                         </a>
                     </li>
 
                     @if (isSignedIn)
                     {
                         <li class="nav-item">
-                            @{
-                                var aMy = Active(controller: "My", area: "");
-                            }
-                            <a class="nav-link px-2 @aMy"
+                            @{ var aMy = Active(controller: "My", area: ""); }
+                            <a class="nav-link @aMy"
                                aria-current="@(aMy == "active" ? "page" : null)"
                                asp-area="" asp-controller="My" asp-action="Events">
-                                My Events
+                                <i class="bi bi-star"></i> My Events
                             </a>
                         </li>
                     }
@@ -106,13 +108,11 @@
                     @if (isAdmin)
                     {
                         <li class="nav-item">
-                            @{
-                                var aAdmin = Active(area: "Admin");
-                            }
-                            <a class="nav-link px-2 @aAdmin"
+                            @{ var aAdmin = Active(area: "Admin"); }
+                            <a class="nav-link @aAdmin"
                                aria-current="@(aAdmin == "active" ? "page" : null)"
                                asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
-                                Admin
+                                <i class="bi bi-speedometer2"></i> Admin
                             </a>
                         </li>
                     }
@@ -120,20 +120,39 @@
                     @if (isOrganizer || isAdmin)
                     {
                         <li class="nav-item">
-                            @{
-                                var aOrg = Active(area: "Organizer");
-                            }
-                            <a class="nav-link px-2 @aOrg"
+                            @{ var aOrg = Active(area: "Organizer"); }
+                            <a class="nav-link @aOrg"
                                aria-current="@(aOrg == "active" ? "page" : null)"
                                asp-area="Organizer" asp-controller="Events" asp-action="Index">
-                                Organizer
+                                <i class="bi bi-clipboard-check"></i> Organizer
                             </a>
                         </li>
                     }
                 </ul>
 
-                <div class="ms-sm-3">
-                    <partial name="_LoginPartial" />
+                <div class="d-flex align-items-center gap-2 ms-auto">
+                    <!-- Desktop search -->
+                    <form asp-controller="Events" asp-action="Index" method="get" class="d-none d-lg-block">
+                        <input name="Search"
+                               class="form-control nav-search"
+                               type="search"
+                               placeholder="Search events…" />
+                    </form>
+
+                    <!-- Create Event (organizer/admin only) -->
+                    @if (isOrganizer || isAdmin)
+                    {
+                        <a class="btn btn-primary btn-compact rounded-2 d-none d-md-inline-flex align-items-center"
+                           asp-area="Organizer" asp-controller="Events" asp-action="Create">
+                            <i class="bi bi-plus-lg me-2"></i>
+                            <span class="text-nowrap">Create Event</span>
+                        </a>
+                    }
+
+                    <!-- Auth -->
+                    <div class="ms-1">
+                        <partial name="_LoginPartial" />
+                    </div>
                 </div>
             </div>
         </div>

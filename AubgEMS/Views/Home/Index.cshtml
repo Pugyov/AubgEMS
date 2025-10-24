@@ -39,19 +39,20 @@
             @foreach (var n in Model!)
             {
                 <div class="col-md-4">
-                    <div class="card h-100 shadow-sm">
+                    <a class="card h-100 shadow-sm text-decoration-none text-reset card-click"
+                       asp-controller="News"
+                       asp-action="Details"
+                       asp-route-id="@n.Id"
+                       aria-label="Read: @n.Title">
                         @if (!string.IsNullOrWhiteSpace(n.ImageUrl))
                         {
                             <img class="card-img-top" src="@n.ImageUrl" alt="@n.Title" />
                         }
                         <div class="card-body">
                             <h3 class="h6 card-title mb-1">@n.Title</h3>
-                            <div class="text-muted small mb-2">
-                                @n.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")
-                            </div>
-                            <a asp-controller="News" asp-action="Details" asp-route-id="@n.Id" class="stretched-link">Read</a>
+                            <div class="text-muted small">@n.CreatedAtUtc.ToLocalTime().ToString("dd MMM yyyy")</div>
                         </div>
-                    </div>
+                    </a>
                 </div>
             }
         </div>

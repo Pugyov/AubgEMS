@@ -13,4 +13,5 @@ public class EventListItemDto
     public string? ImageUrl { get; set; }
     public bool CreatedByMe { get; set; }
     public bool JoinedByMe { get; set; }
+    public int AttendeeCount { get; init; }
 }
