@@ -2,7 +2,7 @@
 @{
     ViewData["Title"] = "Manage News";
 }
-<h1>Manage News</h1>
+<h1 class="mb-3">Manage News</h1>
 
 @if (TempData["StatusMessage"] is string msg)
 {
@@ -13,12 +13,12 @@
     <a class="btn btn-primary" asp-area="Admin" asp-controller="News" asp-action="Create">Create News</a>
 </p>
 
-<table class="table table-striped">
+<table class="table table-striped align-middle">
     <thead>
     <tr>
         <th>Title</th>
-        <th>Created</th>
-        <th></th>
+        <th style="width:18%">Created</th>
+        <th class="text-end" style="width:14%">Actions</th>
     </tr>
     </thead>
     <tbody>
@@ -26,13 +26,15 @@
     {
         <tr>
             <td>@n.Title</td>
-            <td>@n.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm")</td>
+            <td>@n.CreatedAtUtc.ToLocalTime().ToString("yyyy-MM-dd HH:mm")</td>
             <td class="text-end">
-                <a class="btn btn-sm btn-outline-secondary"
-                   asp-area="Admin" asp-controller="News" asp-action="Edit" asp-route-id="@n.Id">Edit</a>
+                <a class="btn btn-sm btn-warning"
+                   asp-area="Admin" asp-controller="News" asp-action="Edit" asp-route-id="@n.Id">
+                    Edit
+                </a>
 
-                <!-- Go to confirmation page -->
-                <a class="btn btn-sm btn-outline-danger ms-2"
+                <!-- Keep GET -> confirmation page -->
+                <a class="btn btn-sm btn-danger ms-2"
                    asp-area="Admin" asp-controller="News" asp-action="Delete" asp-route-id="@n.Id">
                     Delete
                 </a>
@@ -50,7 +52,8 @@
             @for (int p = 1; p <= totalPages; p++)
             {
                 <li class="page-item @(p == Model.Page ? "active" : "")">
-                    <a class="page-link" asp-area="Admin" asp-controller="News" asp-action="Index" asp-route-page="@p">@p</a>
+                    <a class="page-link"
+                       asp-area="Admin" asp-controller="News" asp-action="Index" asp-route-page="@p">@p</a>
                 </li>
             }
         </ul>
