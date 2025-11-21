@@ -30,8 +30,4 @@
       <ProjectReference Include="..\AubgEMS.Infrastructure\AubgEMS.Infrastructure.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Data\" />
-    </ItemGroup>
-
 </Project>
