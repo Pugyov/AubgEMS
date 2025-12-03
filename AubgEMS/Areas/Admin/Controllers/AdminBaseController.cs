@@ -4,6 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 namespace AubgEMS.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    [Authorize(Policy = "RequireAdmin")] // uses the policy we added earlier
+    [Authorize(Policy = "RequireAdmin")]
     public abstract class AdminBaseController : Controller { }
 }
