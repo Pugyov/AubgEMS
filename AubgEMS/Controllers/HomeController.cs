@@ -26,7 +26,7 @@ public class HomeController : Controller
         // Fetch the latest 3 news via paging
         var page = await _news.GetAllAsync(new PageQuery(page: 1, pageSize: 3), ct);
         var latest = page.Items; // IEnumerable<NewsListItemDto>
-        return View(latest);     // Views/Home/Index.cshtml
+        return View(latest);
     }
 
     [HttpGet]

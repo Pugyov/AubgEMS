@@ -47,6 +47,4 @@ namespace AubgEMS.Controllers
             return View(model);
         }
     }
-    
-    
 }

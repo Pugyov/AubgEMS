@@ -11,5 +11,4 @@ public interface IAttendanceService
     Task<PageResult<EventListItemDto>> GetMyEventsAsync(string userId, PageQuery page, CancellationToken ct = default);
     // AubgEMS.Core/Contracts/IAttendanceService.cs
     Task<bool> IsJoinedAsync(int eventId, string userId, CancellationToken ct = default);
-
 }
