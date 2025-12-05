@@ -45,7 +45,7 @@ namespace AubgEMS.Areas.Identity.Pages.Account
             if (!ModelState.IsValid)
                 return Page();
 
-            // We use email as username (you set UserName = Email on register)
+            // Use email as username (set UserName = Email on register)
             var result = await _signInManager.PasswordSignInAsync(
                 Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
 
